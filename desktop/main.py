@@ -1,12 +1,22 @@
 from tkinter import *
 from tkinter import ttk
 import tkinter as tk
+from service.client_request import client_find_all
+
+print(client_find_all())
 i=0
+index=0
 master = Tk('')
 master.title("Controle de OS")
 listbox = Listbox(master)
 listbox.grid(row=3,column=0,padx=10,pady=10,rowspan=26)
 listbox.config(width=5,height=20)
+
+for client in client_find_all():
+	index+=1
+	print(client)
+	listbox.insert(index,client["id"])
+
 
 def print_selected_item():
 	selected_index = listbox.curselection()  # Get the selected item's index

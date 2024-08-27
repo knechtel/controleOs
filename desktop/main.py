@@ -1,9 +1,9 @@
 from tkinter import *
-from tkinter import ttk
-import tkinter as tk
+from datetime import datetime, timedelta
 from service.client_service import client_find_all
 list=[]
-
+data_saida=''
+data_entrada=''
 i=0
 index=0
 master = Tk('')
@@ -71,11 +71,13 @@ dataSaidaGarantia.config(state= "disabled")
 dataSaidaGarantia.grid(row=12,column=2)
 
 
-dataEntrada = Entry(master)
+dataEntrada = Label(master,text='')
 dataEntrada.grid(row=8,column=2)
-dataEntrada.config(state= "disabled")
-dataSaida = Entry(master)
-dataSaida.config(state= "disabled")
+
+
+
+dataSaida = Label(master,text=str(data_saida))
+
 dataSaida.grid(row=9,column=2)
 eAparelho = Entry(master)
 eAparelho.grid(row=4,column=2)
@@ -188,6 +190,41 @@ def cb(event):
 		if(client_cpy["equipments"]!=[]):
 			if(client_cpy["equipments"][0]["price"]!=None):
 				eAparelhoPreco.insert(0,str(client_cpy["equipments"][0]["price"]))
+	#dataEntrada
+	#dataEntrada.insert(0,"test")
+	
+	dataEntrada.config(text = '')
+	if(client_cpy["equipments"]!=None):
+		if(client_cpy["equipments"]!=[]):
+			if(client_cpy["equipments"][0]["entryDate"]!=None):
+				timestamp_millis = client_cpy["equipments"][0]["entryDate"]
+
+# Convertendo milissegundos para segundos
+				timestamp_seconds = timestamp_millis / 1000
+
+# Convertendo o timestamp para uma data em Python
+				date = datetime.fromtimestamp(timestamp_seconds)
+				formatted_date = date.strftime("%d/%m/%Y")
+				data_entrada = str(formatted_date+"  -                          ")
+				dataEntrada.config(text = data_entrada)
+				
+
+	#dataSaida.delete(0,'end')
+	dataSaida.config(text = '')
+	if(client_cpy["equipments"]!=None):
+		if(client_cpy["equipments"]!=[]):
+			if(client_cpy["equipments"][0]["departureDate"]!=None):
+				timestamp_millis = client_cpy["equipments"][0]["departureDate"]
+
+# Convertendo milissegundos para segundos
+				timestamp_seconds = timestamp_millis / 1000
+
+# Convertendo o timestamp para uma data em Python
+				date = datetime.fromtimestamp(timestamp_seconds)
+				formatted_date = date.strftime("%d/%m/%Y")
+				data_saida = str(formatted_date+"  -                          ")
+				dataSaida.config(text = data_saida)
 
 listbox.bind('<<ListboxSelect>>', cb)
+
 mainloop()

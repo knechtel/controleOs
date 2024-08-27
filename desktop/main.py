@@ -224,7 +224,14 @@ def cb(event):
 				formatted_date = date.strftime("%d/%m/%Y")
 				data_saida = str(formatted_date+"  -                          ")
 				dataSaida.config(text = data_saida)
-
+			itemPronto.deselect()
+			if(client_cpy["equipments"]!=None):
+				if(client_cpy["equipments"]!=[]):
+					if(client_cpy["equipments"][0]["pronto"]!=None):
+						if(client_cpy["equipments"][0]["pronto"]!=False):
+							itemPronto.select()
+						else:
+							itemPronto.deselect()
 listbox.bind('<<ListboxSelect>>', cb)
 
 mainloop()

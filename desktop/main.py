@@ -1,9 +1,9 @@
 from tkinter import *
 from tkinter import ttk
 import tkinter as tk
-from service.client_request import client_find_all
+from service.client_service import client_find_all
+list=[]
 
-print(client_find_all())
 i=0
 index=0
 master = Tk('')
@@ -15,6 +15,7 @@ listbox.config(width=5,height=20)
 for client in client_find_all():
 	index+=1
 	print(client)
+	list.append(client)
 	listbox.insert(index,client["id"])
 
 
@@ -32,11 +33,9 @@ def myfunction():
 	listbox.insert(i,i)
 	i=i+1
 	
-def cb(event):
-	test = str(event) + '\n' + str(listbox.curselection())
-	print(test)
 
-listbox.bind('<<ListboxSelect>>', cb)
+
+
 Label(master, text='').grid(row=0)
 Label(master, text='').grid(row=1)
 Label(master, bg="white", fg='#f00',text='OS').grid(row=2,column=0)
@@ -132,4 +131,63 @@ T.grid(row=10,column=4)
 Label(master, text='Obs').grid(row=10,column=3)
 buttonAparelhoSave=Button(master,command=myfunction, text="Enviar")
 buttonAparelhoSave.grid(row=11,column=4)
+
+
+def cb(event):
+	test = str(event) + '\n' + str(listbox.curselection())
+	
+	#current = list[listbox.curselection]
+
+	obj_client = listbox.curselection()
+
+	aux_client = str(obj_client).replace(")","",2).replace("(","",2).replace(",","",2)
+	
+	client_cpy = list[int(aux_client)]
+	entryName.delete(0, 'end')
+	entryName.insert(0,client_cpy["name"])
+	
+	endereco.delete(0, 'end')
+	if(client_cpy["address"] != None):
+		endereco.insert(0,client_cpy["address"])
+	
+	eEmail.delete(0, 'end')
+	eEmail.insert(0,client_cpy["email"])
+
+	eCPF.delete(0,'end')
+	eCPF.insert(0,client_cpy["cpf"])
+	
+	
+	eTelefone.delete(0,'end')
+	if(client_cpy["phone"]!= None):
+		eTelefone.insert(0,client_cpy["phone"])
+
+	eAparelhoModelo.delete(0,'end')
+	if(client_cpy["equipments"]!=None):
+		if(client_cpy["equipments"]!=[]):
+			eAparelhoModelo.insert(0,client_cpy["equipments"][0]["model"])
+	
+	eAparelhoSerial.delete(0,'end')
+	if(client_cpy["equipments"]!=None):
+		if(client_cpy["equipments"]!=[]):
+			eAparelhoSerial.insert(0,client_cpy["equipments"][0]["serial"])
+
+	eAparelhoMarca.delete(0,'end')
+	if(client_cpy["equipments"]!=None):
+		if(client_cpy["equipments"]!=[]):
+			eAparelhoMarca.insert(0,client_cpy["equipments"][0]["brand"])
+
+	eAparelhoDefeito.delete(0,'end')
+	
+	if(client_cpy["equipments"]!=None):
+		if(client_cpy["equipments"]!=[]):
+			if(client_cpy["equipments"][0]["defectDefectForRepair"]!=None):
+				eAparelhoDefeito.insert(0,client_cpy["equipments"][0]["defectDefectForRepair"])		
+
+	eAparelhoPreco.delete(0,'end')
+	if(client_cpy["equipments"]!=None):
+		if(client_cpy["equipments"]!=[]):
+			if(client_cpy["equipments"][0]["price"]!=None):
+				eAparelhoPreco.insert(0,str(client_cpy["equipments"][0]["price"]))
+
+listbox.bind('<<ListboxSelect>>', cb)
 mainloop()

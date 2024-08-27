@@ -5,4 +5,13 @@ def client_find_all():
     data = x.json()
     print(data[1]["id"])
     return data
-client_find_all()
+
+def client_find_by_id(id):
+    url = 'http://localhost:8080/client-findById'
+    myobj = {'id': id}
+    x = requests.post(url, json = myobj)
+    data = x.json()
+    print(data)
+    return data
+client_find_by_id(2)
+

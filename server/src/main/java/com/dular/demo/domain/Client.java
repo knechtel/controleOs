@@ -17,6 +17,8 @@ public class Client {
     private String rg;
     private String email;
     private String address;
+    @Column(name = "phone", nullable=true)
+    private String phone;
     @OneToMany(mappedBy = "client",fetch = FetchType.LAZY)
     private List<Equipment> equipments;
 
@@ -74,5 +76,13 @@ public class Client {
 
     public void setEquipments(List<Equipment> equipments) {
         this.equipments = equipments;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

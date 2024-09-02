@@ -13,5 +13,16 @@ def client_find_by_id(id):
     data = x.json()
     print(data)
     return data
-client_find_by_id(2)
+#client_find_by_id(2)
 
+def client_update(client):
+    url = 'http://localhost:8080/client-update'
+    myobj = {'id': client["id"], 'name':client["name"],
+             'email':client["email"],
+             'cpf':client["cpf"],
+             'phone':client["phone"]
+         }
+    x = requests.post(url, json = myobj)
+  
+    print('teste = ',x)
+    return x

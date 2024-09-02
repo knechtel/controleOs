@@ -36,4 +36,8 @@ public class UserProfileController {
     public void delete(@RequestBody UserProfileDto userProfileDto){
         userProfileService.delete(userProfileDto.getId());
     }
+    @RequestMapping(value = "user-find", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public UserProfile findUser(@RequestBody UserProfileDto userProfileDto){
+        return  userProfileService.findByLoginAndPassword(userProfileDto);
+    }
 }

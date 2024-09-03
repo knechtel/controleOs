@@ -1,20 +1,32 @@
-from tkinter import *
+from tkinter import * 
+import  tkinter    as tk
+from tkinter import messagebox
 from datetime import datetime, timedelta
-from service.client_service import client_find_all
+from service.client_service import client_find_all, client_update
+from service.equipment_service import equipment_update
+itemAutorizado = None
+
 list=[]
+editName=False
+textObs = None
 data_saida=''
 data_entrada=''
 i=0
 index=0
 master = Tk('')
+var = tk.IntVar()
+devolucao_state = tk.IntVar()
+pronto_state = tk.IntVar()
+entregue_state = tk.IntVar()
 master.title("Controle de OS")
 listbox = Listbox(master)
 listbox.grid(row=3,column=0,padx=10,pady=10,rowspan=26)
 listbox.config(width=5,height=20)
+entryName = Entry(master)
+client_cpy = None
 
 for client in client_find_all():
 	index+=1
-	print(client)
 	list.append(client)
 	listbox.insert(index,client["id"])
 
@@ -25,13 +37,86 @@ def print_selected_item():
 		selected_item = listbox.get(selected_index[0])  # Get the selected item
 		print(f"Selected Item: {selected_item}")
 	else:
-				print("no selected item ")
+		print("no selected item ")
 
+
+def get_sate_entregue():
+	global entregue_state
+	if(entregue_state.get() == 1):
+		return True
+	else:
+		return False
+	
+
+def get_sate_autorizado():
+	global var
+	state = var.get()
+	if(state == 1):
+		return True
+	else:
+		return False
+	
+
+def get_sate_devolucao():
+	global devolucao_state
+	if(devolucao_state.get() == 1):
+		return True
+	else:
+		return False
+	
+def get_sate_pronto():
+	global pronto_state
+	if(pronto_state.get() == 1):
+		return True
+	else:
+		return False
+	
 def myfunction():
 	global i
-	print('ola mundo ',i)
-	listbox.insert(i,i)
-	i=i+1
+	global editName
+	global client_cpy
+	client_cpy["name"] = entryName.get()
+	client_cpy["cpf"] = eCPF.get()
+	client_cpy["phone"] = eTelefone.get()
+	client_cpy["address"] = endereco.get()
+	client_cpy["email"] = eEmail.get()
+	client_cpy["price"] = eAparelhoPreco.get()
+	#client_cpy["equipment"][0][""] = eAparelho.get()
+	print('ola mundo ',i, ' swui name ',client_cpy["name"])
+	print('ola mundo ',i, ' swui cpf ',client_cpy["cpf"])
+	print('ola mundo ',i, ' swui phone ',client_cpy["phone"])
+	print('ola mundo ',i, ' swui address',client_cpy["address"])
+	messagebox.showwarning ('Aviso!', 'Cliente editado com sucesso!') 
+
+
+
+#	listbox.insert(i,i)
+	# if(editName==False):
+	# 	entryName.config(state='normal')
+	# else:
+	# 	entryName.config(state='readonly')
+	client_update(client_cpy)
+	client_cpy["equipments"][0]["brand"] = eAparelhoMarca.get()
+	client_cpy["equipments"][0]["defectForRepair"] = eAparelhoDefeito.get()
+	client_cpy["equipments"][0]["price"] = eAparelhoPreco.get()
+	print("olha obs  ----     ",textObs.get("1.0",END))
+	client_cpy["equipments"][0]["obs"] = textObs.get("1.0",END)
+	global var
+	client_cpy["equipments"][0]["autorizado"] =  get_sate_autorizado()
+	client_cpy["equipments"][0]["devolucao"] =  get_sate_devolucao()
+	client_cpy["equipments"][0]["pronto"] =  get_sate_pronto()
+	client_cpy["equipments"][0]["entregue"] =  get_sate_entregue()
+	print("verifica  =  ",get_sate_entregue())
+	listbox.delete(0,tk.END)
+	equipment_update(client_cpy)
+	index=0
+	list.clear()
+	
+	for client in client_find_all():
+		index+=1
+		list.append(client)
+		listbox.insert(index,client["id"])
+	listbox.get(1)
 	
 
 
@@ -83,7 +168,7 @@ eAparelho = Entry(master)
 eAparelho.grid(row=4,column=2)
 eAparelho.insert(0,"E6")
 
-entryName = Entry(master)
+
 entryName.grid(row=0, column=2)
 
 
@@ -117,19 +202,21 @@ endereco.grid(row=1,column=4)
 
 button6=Button(master,command=myfunction, text="Enviar")
 button6.grid(row=2,column=5)
-itemPronto = Checkbutton(master, text="Pronto  ")
+itemPronto = Checkbutton(master, text="Pronto  ",variable=pronto_state)
 itemPronto.grid(row=6,column=3)
-itemEntregue = Checkbutton(master, text="Entregue")
-itemEntregue.grid(row=7,column=3)
-itemDevolucao = Checkbutton(master, text="Devolução")
+item_entregue = Checkbutton(master, text="Entregue",variable=entregue_state)
+item_entregue.grid(row=7,column=3)
+
+itemDevolucao = Checkbutton(master, text="Devolução",variable=devolucao_state)
 itemDevolucao.grid(row=7,column=4)
-itemAutorizado = Checkbutton(master, text="Autorizado")
+
+itemAutorizado = Checkbutton(master, text="Autorizado",variable=var)
 itemAutorizado.grid(row=8,column=4)
 itemGarantia = Checkbutton(master, text="Garantia")
 itemGarantia.grid(row=9,column=4)
-
-T = Text(master, height = 5, width = 25)
-T.grid(row=10,column=4)
+ 
+textObs = Text(master, height = 5, width = 25)
+textObs.grid(row=10,column=4)
 Label(master, text='Obs').grid(row=10,column=3)
 buttonAparelhoSave=Button(master,command=myfunction, text="Enviar")
 buttonAparelhoSave.grid(row=11,column=4)
@@ -144,6 +231,7 @@ def cb(event):
 
 	aux_client = str(obj_client).replace(")","",2).replace("(","",2).replace(",","",2)
 	
+	global client_cpy 
 	client_cpy = list[int(aux_client)]
 	entryName.delete(0, 'end')
 	entryName.insert(0,client_cpy["name"])
@@ -182,8 +270,8 @@ def cb(event):
 	
 	if(client_cpy["equipments"]!=None):
 		if(client_cpy["equipments"]!=[]):
-			if(client_cpy["equipments"][0]["defectDefectForRepair"]!=None):
-				eAparelhoDefeito.insert(0,client_cpy["equipments"][0]["defectDefectForRepair"])		
+			if(client_cpy["equipments"][0]["defectForRepair"]!=None):
+				eAparelhoDefeito.insert(0,client_cpy["equipments"][0]["defectForRepair"])		
 
 	eAparelhoPreco.delete(0,'end')
 	if(client_cpy["equipments"]!=None):
@@ -224,14 +312,49 @@ def cb(event):
 				formatted_date = date.strftime("%d/%m/%Y")
 				data_saida = str(formatted_date+"  -                          ")
 				dataSaida.config(text = data_saida)
-			itemPronto.deselect()
-			if(client_cpy["equipments"]!=None):
-				if(client_cpy["equipments"]!=[]):
-					if(client_cpy["equipments"][0]["pronto"]!=None):
-						if(client_cpy["equipments"][0]["pronto"]!=False):
-							itemPronto.select()
-						else:
-							itemPronto.deselect()
+	itemPronto.deselect()
+	if(client_cpy["equipments"]!=None):
+		if(client_cpy["equipments"]!=[]):
+			if(client_cpy["equipments"][0]["pronto"]!=None):
+				if(client_cpy["equipments"][0]["pronto"]!=False):
+					itemPronto.select()
+				else:
+					itemPronto.deselect()
+
+	itemAutorizado.deselect()
+	if(client_cpy["equipments"]!=None):
+		if(client_cpy["equipments"]!=[]):
+			if(client_cpy["equipments"][0]["pronto"]!=None):
+				if(client_cpy["equipments"][0]["autorizado"]!=False):
+					itemAutorizado.select()
+				else:
+					itemAutorizado.deselect()
+	
+	if(client_cpy["equipments"]!=None):
+		if(client_cpy["equipments"]!=[]):
+			if(client_cpy["equipments"][0]["entregue"]!=None):
+				if(client_cpy["equipments"][0]["entregue"]!=False):
+					item_entregue.select()
+				else:
+					item_entregue.deselect()
+	itemDevolucao.deselect()
+	if(client_cpy["equipments"]!=None):
+		if(client_cpy["equipments"]!=[]):
+			if(client_cpy["equipments"][0]["devolucao"]!=None):
+				if(client_cpy["equipments"][0]["devolucao"]==True):
+					itemDevolucao.select()
+					print("--------------------------- olha aqui")
+				else:
+					itemDevolucao.deselect()	
+
+	textObs.delete("1.0", "end")
+	if(client_cpy["equipments"]!=None):
+		if(client_cpy["equipments"]!=[]):
+			if(client_cpy["equipments"][0]["obs"]!=None):
+				textObs.insert(INSERT,str(client_cpy["equipments"][0]["obs"]))
+	if(client_cpy["equipments"][0]["entregue"]==True):
+		entryName.config(state='readonly')
+
 listbox.bind('<<ListboxSelect>>', cb)
 
 mainloop()

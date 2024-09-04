@@ -1,4 +1,5 @@
 from tkinter import * 
+import webbrowser 
 import  tkinter    as tk
 from tkinter import messagebox
 from datetime import datetime, timedelta
@@ -70,7 +71,13 @@ def get_sate_pronto():
 		return True
 	else:
 		return False
-	
+
+def imprimir_os():
+	webbrowser.open("https://www.google.com")  
+
+def novo_os():
+	print("prepara nova Os.")
+
 def myfunction():
 	global i
 	global editName
@@ -200,8 +207,8 @@ eAparelhoPreco.grid(row=5,column=4)
 endereco = Entry(master)
 endereco.grid(row=1,column=4)
 
-button6=Button(master,command=myfunction, text="Enviar")
-button6.grid(row=2,column=5)
+# button6=Button(master,command=myfunction, text="Enviar")
+# button6.grid(row=2,column=5)
 itemPronto = Checkbutton(master, text="Pronto  ",variable=pronto_state)
 itemPronto.grid(row=6,column=3)
 item_entregue = Checkbutton(master, text="Entregue",variable=entregue_state)
@@ -218,9 +225,12 @@ itemGarantia.grid(row=9,column=4)
 textObs = Text(master, height = 5, width = 25)
 textObs.grid(row=10,column=4)
 Label(master, text='Obs').grid(row=10,column=3)
-buttonAparelhoSave=Button(master,command=myfunction, text="Enviar")
+buttonAparelhoSave=Button(master,command=myfunction, text="Salvar")
 buttonAparelhoSave.grid(row=11,column=4)
-
+buttonAparelhoNovo=Button(master,command=novo_os, text="Novo")
+buttonAparelhoNovo.grid(row=11,column=5)
+buttonAparelhoOs=Button(master,command=imprimir_os, text="Imprimir")
+buttonAparelhoOs.grid(row=11,column=6)
 
 def cb(event):
 	test = str(event) + '\n' + str(listbox.curselection())

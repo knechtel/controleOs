@@ -76,6 +76,7 @@ def imprimir_os():
 	webbrowser.open("https://www.google.com")  
 
 def novo_os():
+	clear_fields()
 	print("prepara nova Os.")
 
 def myfunction():
@@ -388,4 +389,32 @@ def cb(event):
 		textObs.config(state='normal')
 listbox.bind('<<ListboxSelect>>', cb)
 
+def clear_fields():
+	entryName.config(state='normal')
+	eTelefone.config(state='normal')
+	eEmail.config(state='normal')
+	endereco.config(state='normal')
+	eCPF.config(state='normal')
+	eAparelhoModelo.config(state='normal')
+	eAparelhoSerial.config(state='normal')
+	eAparelhoMarca.config(state='normal')
+	eAparelhoDefeito.config(state='normal')
+	eAparelhoPreco.config(state='normal')
+	textObs.config(state='normal')
+	entryName.delete(0, END)
+	eTelefone.delete(0, END)
+	eEmail.delete(0, END)
+	endereco.delete(0, END)
+	eCPF.delete(0, END)
+	eAparelhoModelo.delete(0, END)
+	eAparelhoSerial.delete(0, END)
+	eAparelhoMarca.delete(0, END)
+	eAparelhoDefeito.delete(0, END)
+	eAparelhoPreco.delete(0, END)
+	#textObs.delete(0, END)
+	itemPronto.deselect()
+	itemDevolucao.deselect()	
+	itemAutorizado.deselect()
+	item_entregue.deselect()
+	itemGarantia.deselect()
 mainloop()

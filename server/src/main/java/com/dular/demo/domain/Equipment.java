@@ -16,6 +16,7 @@ public class Equipment {
     private String model;
     private String serial;
     private double price;
+    private String brand;
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private Client client;
@@ -28,6 +29,9 @@ public class Equipment {
     private String defectDefectForRepair;
     private boolean autorizado;
     private boolean pronto;
+    private String obs;
+    private Boolean entregue;
+    private boolean devolucao;
     public Equipment(Client client) {
         this.client = client;
     }
@@ -146,5 +150,37 @@ public class Equipment {
 
     public void setPronto(boolean pronto) {
         this.pronto = pronto;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public boolean isDevolucao() {
+        return devolucao;
+    }
+
+    public void setDevolucao(boolean devolucao) {
+        this.devolucao = devolucao;
+    }
+
+    public String getObs() {
+        return obs;
+    }
+
+    public void setObs(String obs) {
+        this.obs = obs;
+    }
+
+    public Boolean getEntregue() {
+        return entregue;
+    }
+
+    public void setEntregue(Boolean entergue) {
+        this.entregue = entergue;
     }
 }

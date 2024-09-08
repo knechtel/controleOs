@@ -14,6 +14,8 @@ public class ClientDto {
     private String email;
     private String cpf;
 
+    private String phone;
+
     public Client toBuild(ClientDto clientDto) {
         Client entity = new Client();
         if (id != null) {
@@ -25,6 +27,8 @@ public class ClientDto {
             entity.setEmail(email);
         if (cpf != null)
             entity.setCpf(cpf);
+        if(phone!=null)
+            entity.setPhone(phone);
 
         return entity;
     }

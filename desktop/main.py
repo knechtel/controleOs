@@ -23,6 +23,7 @@ master.title("Controle de OS")
 listbox = Listbox(master)
 listbox.grid(row=3,column=0,padx=10,pady=10,rowspan=26)
 listbox.config(width=5,height=20)
+flag_novo = False
 entryName = Entry(master)
 client_cpy = None
 
@@ -77,6 +78,8 @@ def imprimir_os():
 
 def novo_os():
 	clear_fields()
+	global flag_novo
+	flag_novo = True
 	print("prepara nova Os.")
 
 def myfunction():

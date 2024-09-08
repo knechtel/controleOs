@@ -26,3 +26,6 @@ def client_update(client):
   
     print('teste = ',x)
     return x
+
+def client_create(client):
+    url = 'http://localhost:8080/client-create'

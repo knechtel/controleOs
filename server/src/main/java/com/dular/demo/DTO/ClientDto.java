@@ -64,4 +64,12 @@ public class ClientDto {
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }

@@ -20,7 +20,8 @@ def client_update(client):
     myobj = {'id': client["id"], 'name':client["name"],
              'email':client["email"],
              'cpf':client["cpf"],
-             'phone':client["phone"]
+             'phone':client["phone"],
+             'address':client["address"]
          }
     x = requests.post(url, json = myobj)
   
@@ -29,3 +30,12 @@ def client_update(client):
 
 def client_create(client):
     url = 'http://localhost:8080/client-create'
+    myobj = { 'name':client.name,
+             'email':client.email,
+             'cpf':client.cpf,
+             'phone':client.telefone
+    }
+    x = requests.post(url, json = myobj)
+  
+    print('teste = ',x)
+    return x

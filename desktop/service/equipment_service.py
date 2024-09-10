@@ -39,7 +39,8 @@ def equipment_create(equipment):
              'autorizado':equipment.autorizado,
              'devolucao':equipment.devolucao,
              'pronto':equipment.pronto,
-             'entregue':equipment.entregue
+             'entregue':equipment.entregue,
+             'idClient':equipment.idClient
              }
     x = requests.post(url, json = myobj)
-    return x
+    return x.json().get('id')

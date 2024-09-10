@@ -38,4 +38,4 @@ def client_create(client):
     x = requests.post(url, json = myobj)
   
     print('teste = ',x)
-    return x
+    return x.json().get('id')

@@ -11,3 +11,4 @@ class Equipment:
             self.devolucao = False
             self.pronto = False
             self.entregue = False
+            self.idClient=0

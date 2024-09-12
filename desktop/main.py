@@ -3,11 +3,14 @@ import webbrowser
 import  tkinter    as tk
 from tkinter import messagebox
 from datetime import datetime, timedelta
-from service.client_service import client_find_all, client_update
-from service.equipment_service import equipment_update
-itemAutorizado = None
+from model.client import Client
+from model.equipment import Equipment
+from service.client_service import client_find_all, client_update, client_create
+from service.equipment_service import equipment_update, equipment_create
 
-list=[]
+itemAutorizado = None
+client_clone = Client()
+list_clients=[]
 editName=False
 textObs = None
 data_saida=''
@@ -15,7 +18,7 @@ data_entrada=''
 i=0
 index=0
 master = Tk('')
-var = tk.IntVar()
+state_autorizado = tk.IntVar()
 devolucao_state = tk.IntVar()
 pronto_state = tk.IntVar()
 entregue_state = tk.IntVar()
@@ -27,11 +30,20 @@ flag_novo = False
 entryName = Entry(master)
 client_cpy = None
 
+
+
 for client in client_find_all():
 	index+=1
-	list.append(client)
-	listbox.insert(index,client["id"])
+	list_clients.append(client)
+	listbox.insert(index,client.id)
 
+
+def is_iterable(obj):
+    try:
+        iter(obj)
+        return True
+    except TypeError:
+        return False
 
 def print_selected_item():
 	selected_index = listbox.curselection()  # Get the selected item's index
@@ -50,9 +62,9 @@ def get_sate_entregue():
 		return False
 	
 
-def get_sate_autorizado():
-	global var
-	state = var.get()
+def get_state_autorizado():
+	global state_autorizado
+	state = state_autorizado.get()
 	if(state == 1):
 		return True
 	else:
@@ -82,52 +94,73 @@ def novo_os():
 	flag_novo = True
 	print("prepara nova Os.")
 
-def myfunction():
+def do_save():
 	global i
 	global editName
-	global client_cpy
-	client_cpy["name"] = entryName.get()
-	client_cpy["cpf"] = eCPF.get()
-	client_cpy["phone"] = eTelefone.get()
-	client_cpy["address"] = endereco.get()
-	client_cpy["email"] = eEmail.get()
-	client_cpy["price"] = eAparelhoPreco.get()
-	#client_cpy["equipment"][0][""] = eAparelho.get()
-	print('ola mundo ',i, ' swui name ',client_cpy["name"])
-	print('ola mundo ',i, ' swui cpf ',client_cpy["cpf"])
-	print('ola mundo ',i, ' swui phone ',client_cpy["phone"])
-	print('ola mundo ',i, ' swui address',client_cpy["address"])
-	messagebox.showwarning ('Aviso!', 'Cliente editado com sucesso!') 
+	global client_clone
+	if( flag_novo == True):
+		if(listbox.size() >= 1):
+		
+			print("Novo registro"+ entryName.get())
+			
+			client = Client()
+			client.name = entryName.get()
+			client.cpf = eCPF.get()
+			client.telefone = eTelefone.get()
+			client.address = endereco.get()
+			client.email = eEmail.get()
+			idClient = client_create(client)
+			
+			equipment = Equipment()
+			if(eAparelhoSerial.get()!=''):
+				equipment.serial = eAparelhoSerial.get()
+			if(eAparelhoModelo.get()!=''):
+				equipment.model = eAparelhoModelo.get()
+			if(eAparelhoMarca.get()!=''):
+				equipment.brand = eAparelhoMarca.get()
+			if(eAparelhoDefeito!=''):
+				equipment.defectForRepair = eAparelhoDefeito.get()
+			if(textObs.get("1.0",END)!=''):
+				equipment.obs = textObs.get("1.0",END)
+			if(eAparelhoPreco.get()!=''):
+				equipment.price = float(eAparelhoPreco.get())
+			
+			equipment.idClient = idClient
+			list_clients.insert(0,client)
+			
+			client_clone = 	client
+			listbox.insert(0,idClient)
+		
+		else:
+			print("Sim lista vazia")
+	else:
+		print("client_clone id = ",client_clone.id)
+		client_clone.name = entryName.get()
+		client_clone.cpf = eCPF.get()
+		client_clone.telefone = eTelefone.get()
+		client_clone.endereco = endereco.get()
+		client_clone.email = eEmail.get()
+		client_clone.price = eAparelhoPreco.get()
 
+		messagebox.showwarning ('Aviso!', 'Cliente editado com sucesso!') 
+		client_update(client_clone)
 
-
-#	listbox.insert(i,i)
-	# if(editName==False):
-	# 	entryName.config(state='normal')
-	# else:
-	# 	entryName.config(state='readonly')
-	client_update(client_cpy)
-	client_cpy["equipments"][0]["brand"] = eAparelhoMarca.get()
-	client_cpy["equipments"][0]["defectForRepair"] = eAparelhoDefeito.get()
-	client_cpy["equipments"][0]["price"] = eAparelhoPreco.get()
-	print("olha obs  ----     ",textObs.get("1.0",END))
-	client_cpy["equipments"][0]["obs"] = textObs.get("1.0",END)
-	global var
-	client_cpy["equipments"][0]["autorizado"] =  get_sate_autorizado()
-	client_cpy["equipments"][0]["devolucao"] =  get_sate_devolucao()
-	client_cpy["equipments"][0]["pronto"] =  get_sate_pronto()
-	client_cpy["equipments"][0]["entregue"] =  get_sate_entregue()
-	print("verifica  =  ",get_sate_entregue())
-	listbox.delete(0,tk.END)
-	equipment_update(client_cpy)
-	index=0
-	list.clear()
 	
-	for client in client_find_all():
-		index+=1
-		list.append(client)
-		listbox.insert(index,client["id"])
-	listbox.get(1)
+		if(client_clone.list_equipments!=[]):
+			client_clone.list_equipments[0].brand = eAparelhoMarca.get()
+			client_clone.list_equipments[0].defectForRepair = eAparelhoDefeito.get()
+			client_clone.list_equipments[0].price = eAparelhoPreco.get()
+			client_clone.list_equipments[0].model =eAparelhoModelo.get()
+			client_clone.list_equipments[0].obs = textObs.get("1.0",END)
+
+			client_clone.list_equipments[0].autorizado =  get_sate_autorizado()
+			client_clone.list_equipments[0].devolucao =  get_sate_devolucao()
+			client_clone.list_equipments[0].pronto =  get_sate_pronto()
+			client_clone.list_equipments[0].entregue =  get_sate_entregue()
+			print("verifica  =  ",get_sate_entregue())
+
+			equipment_update(client_clone)
+
 	
 
 
@@ -221,7 +254,7 @@ item_entregue.grid(row=7,column=3)
 itemDevolucao = Checkbutton(master, text="Devolução",variable=devolucao_state)
 itemDevolucao.grid(row=7,column=4)
 
-itemAutorizado = Checkbutton(master, text="Autorizado",variable=var)
+itemAutorizado = Checkbutton(master, text="Autorizado",variable=state_autorizado)
 itemAutorizado.grid(row=8,column=4)
 itemGarantia = Checkbutton(master, text="Garantia")
 itemGarantia.grid(row=9,column=4)
@@ -229,7 +262,7 @@ itemGarantia.grid(row=9,column=4)
 textObs = Text(master, height = 5, width = 25)
 textObs.grid(row=10,column=4)
 Label(master, text='Obs').grid(row=10,column=3)
-buttonAparelhoSave=Button(master,command=myfunction, text="Salvar")
+buttonAparelhoSave=Button(master,command=do_save, text="Salvar")
 buttonAparelhoSave.grid(row=11,column=4)
 buttonAparelhoNovo=Button(master,command=novo_os, text="Novo")
 buttonAparelhoNovo.grid(row=11,column=5)
@@ -245,151 +278,120 @@ def cb(event):
 
 	aux_client = str(obj_client).replace(")","",2).replace("(","",2).replace(",","",2)
 	
-	global client_cpy 
-	client_cpy = list[int(aux_client)]
+	global client_clone 
+	client_clone = list_clients[int(aux_client)]
+
+	
 	entryName.delete(0, 'end')
-	entryName.insert(0,client_cpy["name"])
+	entryName.insert(0,client_clone.name)
 	
 	endereco.delete(0, 'end')
-	if(client_cpy["address"] != None):
-		endereco.insert(0,client_cpy["address"])
-	
+	if(client_clone.endereco!=None):
+		endereco.insert(0,client_clone.endereco)
+
 	eEmail.delete(0, 'end')
-	eEmail.insert(0,client_cpy["email"])
+	eEmail.insert(0,client_clone.email)
+
 
 	eCPF.delete(0,'end')
-	eCPF.insert(0,client_cpy["cpf"])
-	
+	eCPF.insert(0,client_clone.cpf)
+
 	
 	eTelefone.delete(0,'end')
-	if(client_cpy["phone"]!= None):
-		eTelefone.insert(0,client_cpy["phone"])
-
-	eAparelhoModelo.delete(0,'end')
-	if(client_cpy["equipments"]!=None):
-		if(client_cpy["equipments"]!=[]):
-			eAparelhoModelo.insert(0,client_cpy["equipments"][0]["model"])
+	eTelefone.insert(0,client_clone.telefone)
 	
-	eAparelhoSerial.delete(0,'end')
-	if(client_cpy["equipments"]!=None):
-		if(client_cpy["equipments"]!=[]):
-			eAparelhoSerial.insert(0,client_cpy["equipments"][0]["serial"])
-
-	eAparelhoMarca.delete(0,'end')
-	if(client_cpy["equipments"]!=None):
-		if(client_cpy["equipments"]!=[]):
-			eAparelhoMarca.insert(0,client_cpy["equipments"][0]["brand"])
-
-	eAparelhoDefeito.delete(0,'end')
+	#busca aparelho by id
+	# arrumar aqui
 	
-	if(client_cpy["equipments"]!=None):
-		if(client_cpy["equipments"]!=[]):
-			if(client_cpy["equipments"][0]["defectForRepair"]!=None):
-				eAparelhoDefeito.insert(0,client_cpy["equipments"][0]["defectForRepair"])		
+	if( 0 < len(client_clone.list_equipments)):
+		eAparelhoModelo.delete(0,'end')
+		eAparelhoModelo.insert(0,client_clone.list_equipments[0].model)
 
-	eAparelhoPreco.delete(0,'end')
-	if(client_cpy["equipments"]!=None):
-		if(client_cpy["equipments"]!=[]):
-			if(client_cpy["equipments"][0]["price"]!=None):
-				eAparelhoPreco.insert(0,str(client_cpy["equipments"][0]["price"]))
-	#dataEntrada
-	#dataEntrada.insert(0,"test")
+	if( 0 < len(client_clone.list_equipments)):
+		eAparelhoSerial.delete(0,'end')
+		eAparelhoSerial.insert(0,client_clone.list_equipments[0].serial)
+	if( 0 < len(client_clone.list_equipments)):
+		eAparelhoMarca.delete(0,'end')
+		eAparelhoMarca.insert(0,client_clone.list_equipments[0].brand)
+	if( 0 < len(client_clone.list_equipments)):
+		if(client_clone.list_equipments[0].defectForRepair != None):
+			eAparelhoDefeito.delete(0,'end')
+			eAparelhoDefeito.insert(0,client_clone.list_equipments[0].defectForRepair)
+
+	if( 0 < len(client_clone.list_equipments)):
+		eAparelhoPreco.delete(0,'end')
+		eAparelhoPreco.insert(0,client_clone.list_equipments[0].price)
+
+	if( 0 < len(client_clone.list_equipments)):
+		if(client_clone.list_equipments[0].entryDate!=None):
+			timestamp_millis = client_clone.list_equipments[0].entryDate
+			timestamp_seconds = timestamp_millis / 1000
+			date = datetime.fromtimestamp(timestamp_seconds)
+			formatted_date = date.strftime("%d/%m/%Y")
+			data_entrada = str(formatted_date+"  -                          ")
+			dataEntrada.config(text = data_entrada)
+
+	dataSaida.config(text = '')	
+	if( 0 < len(client_clone.list_equipments)):
+		if(client_clone.list_equipments[0].departureDate!=None):
+
+			timestamp_millis = client_clone.list_equipments[0].departureDate
+			timestamp_seconds = timestamp_millis / 1000
+			date = datetime.fromtimestamp(timestamp_seconds)
+			formatted_date = date.strftime("%d/%m/%Y")
+			data_saida = str(formatted_date+"  -                            ")
+			dataSaida.config(text = data_saida)
 	
-	dataEntrada.config(text = '')
-	if(client_cpy["equipments"]!=None):
-		if(client_cpy["equipments"]!=[]):
-			if(client_cpy["equipments"][0]["entryDate"]!=None):
-				timestamp_millis = client_cpy["equipments"][0]["entryDate"]
+	if( 0 < len(client_clone.list_equipments)):
+		if(client_clone.list_equipments[0].devolucao==True):
+			itemDevolucao.select()
+		else:
+			itemDevolucao.deselect()
 
-# Convertendo milissegundos para segundos
-				timestamp_seconds = timestamp_millis / 1000
+	if( 0 < len(client_clone.list_equipments)):
+		if(client_clone.list_equipments[0].pronto==True):
+			itemPronto.select()
+		else:
+				itemPronto.deselect()
 
-# Convertendo o timestamp para uma data em Python
-				date = datetime.fromtimestamp(timestamp_seconds)
-				formatted_date = date.strftime("%d/%m/%Y")
-				data_entrada = str(formatted_date+"  -                          ")
-				dataEntrada.config(text = data_entrada)
-				
-
-	#dataSaida.delete(0,'end')
-	dataSaida.config(text = '')
-	if(client_cpy["equipments"]!=None):
-		if(client_cpy["equipments"]!=[]):
-			if(client_cpy["equipments"][0]["departureDate"]!=None):
-				timestamp_millis = client_cpy["equipments"][0]["departureDate"]
-
-# Convertendo milissegundos para segundos
-				timestamp_seconds = timestamp_millis / 1000
-
-# Convertendo o timestamp para uma data em Python
-				date = datetime.fromtimestamp(timestamp_seconds)
-				formatted_date = date.strftime("%d/%m/%Y")
-				data_saida = str(formatted_date+"  -                          ")
-				dataSaida.config(text = data_saida)
-	itemPronto.deselect()
-	if(client_cpy["equipments"]!=None):
-		if(client_cpy["equipments"]!=[]):
-			if(client_cpy["equipments"][0]["pronto"]!=None):
-				if(client_cpy["equipments"][0]["pronto"]!=False):
-					itemPronto.select()
-				else:
-					itemPronto.deselect()
-
-	itemAutorizado.deselect()
-	if(client_cpy["equipments"]!=None):
-		if(client_cpy["equipments"]!=[]):
-			if(client_cpy["equipments"][0]["pronto"]!=None):
-				if(client_cpy["equipments"][0]["autorizado"]!=False):
-					itemAutorizado.select()
-				else:
-					itemAutorizado.deselect()
-	
-	if(client_cpy["equipments"]!=None):
-		if(client_cpy["equipments"]!=[]):
-			if(client_cpy["equipments"][0]["entregue"]!=None):
-				if(client_cpy["equipments"][0]["entregue"]!=False):
-					item_entregue.select()
-				else:
-					item_entregue.deselect()
-	itemDevolucao.deselect()
-	if(client_cpy["equipments"]!=None):
-		if(client_cpy["equipments"]!=[]):
-			if(client_cpy["equipments"][0]["devolucao"]!=None):
-				if(client_cpy["equipments"][0]["devolucao"]==True):
-					itemDevolucao.select()
-					print("--------------------------- olha aqui")
-				else:
-					itemDevolucao.deselect()	
+	if( 0 < len(client_clone.list_equipments)):
+			if(client_clone.list_equipments[0].autorizado==True):
+				itemAutorizado.select()
+			else:
+				itemAutorizado.deselect()
 
 	textObs.delete("1.0", "end")
-	if(client_cpy["equipments"]!=None):
-		if(client_cpy["equipments"]!=[]):
-			if(client_cpy["equipments"][0]["obs"]!=None):
-				textObs.insert(INSERT,str(client_cpy["equipments"][0]["obs"]))
-	if(client_cpy["equipments"][0]["entregue"]==True):
-		entryName.config(state='readonly')
-		eTelefone.config(state='readonly')
-		eEmail.config(state='readonly')
-		endereco.config(state='readonly')
-		eCPF.config(state='readonly')
-		eAparelhoModelo.config(state='readonly')
-		eAparelhoSerial.config(state='readonly')
-		eAparelhoMarca.config(state='readonly')
-		eAparelhoDefeito.config(state='readonly')
-		eAparelhoPreco.config(state='readonly')
-		textObs.config(state='disabled')
-	else:
-		entryName.config(state='normal')
-		eTelefone.config(state='normal')
-		eEmail.config(state='normal')
-		endereco.config(state='normal')
-		eCPF.config(state='normal')
-		eAparelhoModelo.config(state='normal')
-		eAparelhoSerial.config(state='normal')
-		eAparelhoMarca.config(state='normal')
-		eAparelhoDefeito.config(state='normal')
-		eAparelhoPreco.config(state='normal')
-		textObs.config(state='normal')
+	if( 0 < len(client_clone.list_equipments)):
+		textObs.insert(INSERT,str(client_clone.list_equipments[0].obs))
+	
+	if( 0 < len(client_clone.list_equipments)):
+		if(client_clone.list_equipments[0].entregue==True):
+			item_entregue.select()
+			entryName.config(state='readonly')
+			eTelefone.config(state='readonly')
+			eEmail.config(state='readonly')
+			endereco.config(state='readonly')
+			eCPF.config(state='readonly')
+			eAparelhoModelo.config(state='readonly')
+			eAparelhoSerial.config(state='readonly')
+			eAparelhoMarca.config(state='readonly')
+			eAparelhoDefeito.config(state='readonly')
+			eAparelhoPreco.config(state='readonly')
+			textObs.config(state='disabled')
+		else:
+			item_entregue.deselect()
+			entryName.config(state='normal')
+			eTelefone.config(state='normal')
+			eEmail.config(state='normal')
+			endereco.config(state='normal')
+			eCPF.config(state='normal')
+			eAparelhoModelo.config(state='normal')
+			eAparelhoSerial.config(state='normal')
+			eAparelhoMarca.config(state='normal')
+			eAparelhoDefeito.config(state='normal')
+			eAparelhoPreco.config(state='normal')
+			textObs.config(state='normal')
+
 listbox.bind('<<ListboxSelect>>', cb)
 
 def clear_fields():

@@ -10,19 +10,19 @@ def equipment_find_by_id(id):
 equipment_find_by_id(7)
 
 def equipment_update(client):
-    print("Entregue = ",client['equipments'][0]["entregue"])
     url = 'http://localhost:8080/equipment-update'
-    myobj = {'id': client["equipments"][0]["id"],
-             'brand':client["equipments"][0]["brand"],
-             'model':client["equipments"][0]["model"],
-             'serial':client['equipments'][0]["serial"],
-             'defectForRepair':client["equipments"][0]["defectForRepair"],
-             'price':client['equipments'][0]["price"],
-             'obs':client['equipments'][0]["obs"],
-             'autorizado':client['equipments'][0]["autorizado"],
-             'devolucao':client['equipments'][0]["devolucao"],
-             'pronto':client['equipments'][0]["pronto"],
-             'entregue':client['equipments'][0]["entregue"]
+    myobj = {'id': client.list_equipments[0].id,
+             'brand':client.list_equipments[0].brand,
+             'model':client.list_equipments[0].model,
+             'serial':client.list_equipments[0].serial,
+             'defectForRepair':client.list_equipments[0].defectForRepair,
+             'price':client.list_equipments[0].price,
+             'obs':client.list_equipments[0].obs,
+             'autorizado':client.list_equipments[0].autorizado,
+             'devolucao':client.list_equipments[0].devolucao,
+             'pronto':client.list_equipments[0].pronto,
+             'entregue':client.list_equipments[0].entregue,
+             'garantia':client.list_equipments[0].garantia
              }
     x = requests.post(url, json = myobj)
     return x

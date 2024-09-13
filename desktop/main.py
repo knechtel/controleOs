@@ -18,6 +18,8 @@ data_entrada=''
 i=0
 index=0
 master = Tk('')
+state_garantia_entregue = tk.IntVar()
+state_garantia = tk.IntVar()
 state_autorizado = tk.IntVar()
 devolucao_state = tk.IntVar()
 pronto_state = tk.IntVar()
@@ -54,9 +56,9 @@ def print_selected_item():
 		print("no selected item ")
 
 
-def get_sate_entregue():
-	global entregue_state
-	if(entregue_state.get() == 1):
+def get_state_entregue():
+	global state_garantia_entregue
+	if(state_garantia_entregue.get() == 1):
 		return True
 	else:
 		return False
@@ -71,7 +73,14 @@ def get_state_autorizado():
 		return False
 	
 
-def get_sate_devolucao():
+def get_state_garantia():
+	global state_garantia
+	if(state_garantia.get() == 1):
+		return True
+	else:
+		return False
+
+def get_state_devolucao():
 	global devolucao_state
 	if(devolucao_state.get() == 1):
 		return True
@@ -140,24 +149,25 @@ def do_save():
 		client_clone.telefone = eTelefone.get()
 		client_clone.endereco = endereco.get()
 		client_clone.email = eEmail.get()
-		client_clone.price = eAparelhoPreco.get()
+		
 
 		messagebox.showwarning ('Aviso!', 'Cliente editado com sucesso!') 
 		client_update(client_clone)
 
 	
-		if(client_clone.list_equipments!=[]):
+		if(len(client_clone.list_equipments) > 0):
 			client_clone.list_equipments[0].brand = eAparelhoMarca.get()
 			client_clone.list_equipments[0].defectForRepair = eAparelhoDefeito.get()
 			client_clone.list_equipments[0].price = eAparelhoPreco.get()
 			client_clone.list_equipments[0].model =eAparelhoModelo.get()
 			client_clone.list_equipments[0].obs = textObs.get("1.0",END)
 
-			client_clone.list_equipments[0].autorizado =  get_sate_autorizado()
-			client_clone.list_equipments[0].devolucao =  get_sate_devolucao()
+			client_clone.list_equipments[0].autorizado =  get_state_autorizado()
+			client_clone.list_equipments[0].devolucao =  get_state_devolucao()
 			client_clone.list_equipments[0].pronto =  get_sate_pronto()
-			client_clone.list_equipments[0].entregue =  get_sate_entregue()
-			print("verifica  =  ",get_sate_entregue())
+			client_clone.list_equipments[0].entregue =  get_state_entregue()
+			client_clone.list_equipments[0].garantia =  get_state_garantia()
+
 
 			equipment_update(client_clone)
 
@@ -185,7 +195,7 @@ Label(master, text='Endereço').grid(row=1,column=3)
 Label(master, text='Entrada').grid(row=8,column=1)
 Label(master, text='Saida').grid(row=9,column=1)
 Label(master, text='Garantia').grid(row=10,column=1,rowspan=2)
-itemEntregue = Checkbutton(master, text="Entregue Garantia")
+itemEntregue = Checkbutton(master, text="Entregue Garantia",variable=state_garantia_entregue)
 itemEntregue.grid(row=10,column=2)
 
 Label(master, text='Entrada').grid(row=11,column=1)
@@ -256,8 +266,8 @@ itemDevolucao.grid(row=7,column=4)
 
 itemAutorizado = Checkbutton(master, text="Autorizado",variable=state_autorizado)
 itemAutorizado.grid(row=8,column=4)
-itemGarantia = Checkbutton(master, text="Garantia")
-itemGarantia.grid(row=9,column=4)
+itemGarantia1 = Checkbutton(master, text="Garantia   ",variable=state_garantia)
+itemGarantia1.grid(row=9,column=4)
  
 textObs = Text(master, height = 5, width = 25)
 textObs.grid(row=10,column=4)
@@ -343,22 +353,34 @@ def cb(event):
 			dataSaida.config(text = data_saida)
 	
 	if( 0 < len(client_clone.list_equipments)):
-		if(client_clone.list_equipments[0].devolucao==True):
+		if(client_clone.list_equipments[0].devolucao == True):
 			itemDevolucao.select()
 		else:
 			itemDevolucao.deselect()
 
 	if( 0 < len(client_clone.list_equipments)):
-		if(client_clone.list_equipments[0].pronto==True):
+		if(client_clone.list_equipments[0].pronto == True):
 			itemPronto.select()
 		else:
 				itemPronto.deselect()
 
 	if( 0 < len(client_clone.list_equipments)):
-			if(client_clone.list_equipments[0].autorizado==True):
-				itemAutorizado.select()
-			else:
-				itemAutorizado.deselect()
+		if(client_clone.list_equipments[0].autorizado==True):
+			itemAutorizado.select()
+		else:
+			itemAutorizado.deselect()
+
+	if( 0 < len(client_clone.list_equipments)):
+		if(client_clone.list_equipments[0].garantia==True):
+			itemGarantia1.select()
+		else:
+				itemGarantia1.deselect()
+	#parte final da garantia 
+	if( 0 < len(client_clone.list_equipments)):
+		if(client_clone.list_equipments[0].departureEquipmentWarranty!=None):
+			itemEntregue.select()
+		else:
+			itemEntregue.deselect()
 
 	textObs.delete("1.0", "end")
 	if( 0 < len(client_clone.list_equipments)):

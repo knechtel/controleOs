@@ -36,6 +36,9 @@ def client_find_all():
                 equipment.departureDate = e1["departureDate"]
                 equipment.obs = e1["obs"]
                 equipment.devolucao = e1["devolucao"]
+                equipment.entregue = e1["entregue"]
+                equipment.garantia = e1["garantia"]
+                equipment.departureEquipmentWarranty = e1["departureEquipmentWarranty"]
                 client.list_equipments.append(equipment)
                 print("item obs = ",equipment.obs," id = ",equipment.id)
         list_client.append(client)
@@ -54,11 +57,11 @@ def client_find_by_id(id):
 
 def client_update(client):
     url = 'http://localhost:8080/client-update'
-    myobj = {'id': client["id"], 'name':client["name"],
-             'email':client["email"],
-             'cpf':client["cpf"],
-             'phone':client["phone"],
-             'address':client["address"]
+    myobj = {'id': client.id, 'name':client.name,
+             'email':client.email,
+             'cpf':client.cpf,
+             'phone':client.telefone,
+             'address':client.endereco
          }
     x = requests.post(url, json = myobj)
   

@@ -11,4 +11,10 @@ class Equipment:
             self.devolucao = False
             self.pronto = False
             self.entregue = False
-            self.idClient=0
+            self.idClient= 0 
+            self.entryDate = None
+            self.departureDate = None
+            self.garantia = False
+            self.departureEquipmentWarranty = None
+        def __str__(self):
+            return f"Id: {self.id}, Brand: {self.brand}, Model = {self.model}"         

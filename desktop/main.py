@@ -121,25 +121,26 @@ def do_save():
 			idClient = client_create(client)
 			
 			equipment = Equipment()
-			if(eAparelhoSerial.get()!=''):
-				equipment.serial = eAparelhoSerial.get()
-			if(eAparelhoModelo.get()!=''):
-				equipment.model = eAparelhoModelo.get()
-			if(eAparelhoMarca.get()!=''):
-				equipment.brand = eAparelhoMarca.get()
-			if(eAparelhoDefeito!=''):
-				equipment.defectForRepair = eAparelhoDefeito.get()
-			if(textObs.get("1.0",END)!=''):
-				equipment.obs = textObs.get("1.0",END)
-			if(eAparelhoPreco.get()!=''):
-				equipment.price = float(eAparelhoPreco.get())
+		
+			equipment.serial = eAparelhoSerial.get()
+		
+			equipment.model = eAparelhoModelo.get()
+				
+			equipment.brand = eAparelhoMarca.get()
+		
+			equipment.defectForRepair = eAparelhoDefeito.get()
+		
+			equipment.obs = textObs.get("1.0",END)
+		
+			equipment.price = float(eAparelhoPreco.get())
 			
 			equipment.idClient = idClient
 			list_clients.insert(0,client)
 			
 			client_clone = 	client
 			listbox.insert(0,idClient)
-		
+			client_clone.list_equipments.append(equipment)
+			equipment_create(equipment)
 		else:
 			print("Sim lista vazia")
 	else:
@@ -171,7 +172,7 @@ def do_save():
 
 			equipment_update(client_clone)
 
-	
+
 
 
 
@@ -370,17 +371,24 @@ def cb(event):
 		else:
 			itemAutorizado.deselect()
 
+	#entrou para garantia
 	if( 0 < len(client_clone.list_equipments)):
 		if(client_clone.list_equipments[0].garantia==True):
 			itemGarantia1.select()
+			itemGarantia1.config(state="disabled")
+			disabled()
 		else:
-				itemGarantia1.deselect()
+			itemGarantia1.deselect()
+			itemGarantia1.config(state="normal")
+			
 	#parte final da garantia 
 	if( 0 < len(client_clone.list_equipments)):
 		if(client_clone.list_equipments[0].departureEquipmentWarranty!=None):
 			itemEntregue.select()
+			itemEntregue.config(state="disabled")
 		else:
 			itemEntregue.deselect()
+			itemEntregue.config(state="normal")
 
 	textObs.delete("1.0", "end")
 	if( 0 < len(client_clone.list_equipments)):
@@ -443,5 +451,25 @@ def clear_fields():
 	itemDevolucao.deselect()	
 	itemAutorizado.deselect()
 	item_entregue.deselect()
-	itemGarantia.deselect()
+	itemGarantia1.deselect()
+	itemPronto.config
+
+def disabled():
+	itemAutorizado.config(state='disabled')
+	itemEntregue.config(state='disabled')
+	item_entregue.config(state='disabled')
+	itemDevolucao.config(state='disabled')
+	itemPronto.config(state='disabled')
+	entryName.config(state='readonly')
+	eTelefone.config(state='readonly')
+	eEmail.config(state='readonly')
+	endereco.config(state='readonly')
+	eCPF.config(state='readonly')
+	eAparelhoModelo.config(state='readonly')
+	eAparelhoSerial.config(state='readonly')
+	eAparelhoMarca.config(state='readonly')
+	eAparelhoDefeito.config(state='readonly')
+	eAparelhoPreco.config(state='readonly')
+	textObs.config(state='disabled')
+
 mainloop()

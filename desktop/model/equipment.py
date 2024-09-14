@@ -11,7 +11,7 @@ class Equipment:
             self.devolucao = False
             self.pronto = False
             self.entregue = False
-            self.idClient= 0 
+            self.id_client= 0 
             self.entryDate = None
             self.departureDate = None
             self.garantia = False

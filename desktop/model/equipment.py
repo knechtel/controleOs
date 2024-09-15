@@ -16,5 +16,6 @@ class Equipment:
             self.departureDate = None
             self.garantia = False
             self.departureEquipmentWarranty = None
+            self.entryEquipmentWarranty = None
         def __str__(self):
             return f"Id: {self.id}, Brand: {self.brand}, Model = {self.model}"         

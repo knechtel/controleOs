@@ -39,8 +39,8 @@ def client_find_all():
                 equipment.entregue = e1["entregue"]
                 equipment.garantia = e1["garantia"]
                 equipment.departureEquipmentWarranty = e1["departureEquipmentWarranty"]
+                equipment.entryEquipmentWarranty = e1["entryEquipmentWarranty"]
                 client.list_equipments.append(equipment)
-                print("item obs = ",equipment.obs," id = ",equipment.id)
         list_client.append(client)
         #print(client.list_equipments)
     
@@ -74,6 +74,7 @@ def client_create(client):
              'email':client.email,
              'cpf':client.cpf,
              'phone':client.telefone,
+             'address': client.endereco
     }
     x = requests.post(url, json = myobj)
   

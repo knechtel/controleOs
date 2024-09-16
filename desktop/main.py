@@ -10,6 +10,7 @@ from service.equipment_service import equipment_update, equipment_create
 
 itemAutorizado = None
 client_clone = Client()
+aux_client = 0
 list_clients=[]
 editName=False
 textObs = None
@@ -39,6 +40,12 @@ for client in client_find_all():
 	list_clients.append(client)
 	listbox.insert(index,client.id)
 
+def is_float(value):
+	try:
+		float(value)
+	except ValueError:
+		return False
+	return True
 
 def is_iterable(obj):
     try:
@@ -57,8 +64,8 @@ def print_selected_item():
 
 
 def get_state_entregue():
-	global state_garantia_entregue
-	if(state_garantia_entregue.get() == 1):
+	global entregue_state
+	if(entregue_state.get() == 1):
 		return True
 	else:
 		return False
@@ -79,7 +86,13 @@ def get_state_garantia():
 		return True
 	else:
 		return False
-
+def get_state__entregue_garantia():
+	global state_garantia_entregue
+	if(state_garantia_entregue.get() == 1):
+		return False
+	else:
+		return False
+	
 def get_state_devolucao():
 	global devolucao_state
 	if(devolucao_state.get() == 1):
@@ -107,6 +120,7 @@ def do_save():
 	global i
 	global editName
 	global client_clone
+	global flag_novo
 	if( flag_novo == True):
 		if(listbox.size() >= 1):
 		
@@ -116,34 +130,45 @@ def do_save():
 			client.name = entryName.get()
 			client.cpf = eCPF.get()
 			client.telefone = eTelefone.get()
-			client.address = endereco.get()
+			client.endereco = endereco.get()
 			client.email = eEmail.get()
-			idClient = client_create(client)
+			
 			
 			equipment = Equipment()
-		
 			equipment.serial = eAparelhoSerial.get()
-		
 			equipment.model = eAparelhoModelo.get()
-				
 			equipment.brand = eAparelhoMarca.get()
-		
 			equipment.defectForRepair = eAparelhoDefeito.get()
-		
 			equipment.obs = textObs.get("1.0",END)
-		
-			equipment.price = float(eAparelhoPreco.get())
-			
-			equipment.idClient = idClient
-			list_clients.insert(0,client)
-			
-			client_clone = 	client
-			listbox.insert(0,idClient)
-			client_clone.list_equipments.append(equipment)
-			equipment_create(equipment)
+
+			if(entryName.get()==''):
+				entryName.config(bg='yellow')
+				messagebox.showwarning ('Aviso!', 'É necessário ao menos o cadastro do nome do cliente!') 
+			else:	
+				if(is_float(eAparelhoPreco.get())):
+					id_client = client_create(client)
+					equipment.id_client = id_client
+					list_clients.insert(0,client)
+					equipment.price = float(eAparelhoPreco.get())
+					client_clone = 	client
+					listbox.insert(0,id_client)
+					
+					eAparelhoPreco.config(bg='white')
+					entryName.config(bg='white')
+					equipment.id = equipment_create(equipment)
+					client_clone.list_equipments.append(equipment)
+					flag_novo = False
+				else:
+					eAparelhoPreco.config(bg='yellow')
+					if(entryName.get()!=''):
+						entryName.config(bg="white")
+					messagebox.showwarning ('Aviso!', 'Campo preço com valor inválido!') 
 		else:
 			print("Sim lista vazia")
 	else:
+		global aux_client
+		indices_selecionados = listbox.curselection()
+		client_clone.id = listbox.get(indices_selecionados[0])
 		print("client_clone id = ",client_clone.id)
 		client_clone.name = entryName.get()
 		client_clone.cpf = eCPF.get()
@@ -167,13 +192,25 @@ def do_save():
 			client_clone.list_equipments[0].devolucao =  get_state_devolucao()
 			client_clone.list_equipments[0].pronto =  get_sate_pronto()
 			client_clone.list_equipments[0].entregue =  get_state_entregue()
-			client_clone.list_equipments[0].garantia =  get_state_garantia()
+			#client_clone.list_equipments[0].entryDate
+			#client_clone.list_equipments[0].garantia =  get_state_garantia()
+			client_clone.list_equipments[0].departuretWarranty = get_state__entregue_garantia()
 
+			#aqui trabalhando nesta feature
+			
+			data = equipment_update(client_clone.list_equipments[0])
+			if(data.get("departureDate")!=None):
+				
+				client_clone.list_equipments[0].departureDate = data.get("departureDate")
+				timestamp_millis = client_clone.list_equipments[0].departureDate
 
-			equipment_update(client_clone)
-
-
-
+				timestamp_seconds = timestamp_millis / 1000
+				date = datetime.fromtimestamp(timestamp_seconds)
+				formatted_date = date.strftime("%d/%m/%Y")
+				data_saidaAux = str(formatted_date+"  -                            ")
+				dataSaida.config(text= data_saidaAux)
+			else:
+				dataSaida.config(text= '')
 
 
 Label(master, text='').grid(row=0)
@@ -202,8 +239,8 @@ itemEntregue.grid(row=10,column=2)
 Label(master, text='Entrada').grid(row=11,column=1)
 dataEntradaGarantia = Entry(master)
 dataEntradaGarantia.grid(row=11,column=2)
-dataEntradaGarantia.insert(0,"25/08/2024")
-dataEntradaGarantia.config(state= "disabled")
+#dataEntradaGarantia.insert(0,"25/08/2024")
+dataEntradaGarantia.config(state= "readonly")
 Label(master, text='Saida').grid(row=12,column=1)
 dataSaidaGarantia = Entry(master)
 dataSaidaGarantia.config(state= "disabled")
@@ -281,18 +318,18 @@ buttonAparelhoOs=Button(master,command=imprimir_os, text="Imprimir")
 buttonAparelhoOs.grid(row=11,column=6)
 
 def cb(event):
-	test = str(event) + '\n' + str(listbox.curselection())
+	global flag_novo 
+	flag_novo = False
 	
-	#current = list[listbox.curselection]
-
 	obj_client = listbox.curselection()
 
+	global aux_client
 	aux_client = str(obj_client).replace(")","",2).replace("(","",2).replace(",","",2)
 	
 	global client_clone 
 	client_clone = list_clients[int(aux_client)]
 
-	
+	client_clone.id = aux_client
 	entryName.delete(0, 'end')
 	entryName.insert(0,client_clone.name)
 	
@@ -300,6 +337,7 @@ def cb(event):
 	if(client_clone.endereco!=None):
 		endereco.insert(0,client_clone.endereco)
 
+	
 	eEmail.delete(0, 'end')
 	eEmail.insert(0,client_clone.email)
 
@@ -350,8 +388,9 @@ def cb(event):
 			timestamp_seconds = timestamp_millis / 1000
 			date = datetime.fromtimestamp(timestamp_seconds)
 			formatted_date = date.strftime("%d/%m/%Y")
-			data_saida = str(formatted_date+"  -                            ")
-			dataSaida.config(text = data_saida)
+			data_saida_cast = str(formatted_date+"  -                             ")
+			
+			dataSaida.config(text= data_saida_cast)
 	
 	if( 0 < len(client_clone.list_equipments)):
 		if(client_clone.list_equipments[0].devolucao == True):
@@ -363,7 +402,7 @@ def cb(event):
 		if(client_clone.list_equipments[0].pronto == True):
 			itemPronto.select()
 		else:
-				itemPronto.deselect()
+			itemPronto.deselect()
 
 	if( 0 < len(client_clone.list_equipments)):
 		if(client_clone.list_equipments[0].autorizado==True):
@@ -376,19 +415,49 @@ def cb(event):
 		if(client_clone.list_equipments[0].garantia==True):
 			itemGarantia1.select()
 			itemGarantia1.config(state="disabled")
-			disabled()
+
 		else:
 			itemGarantia1.deselect()
 			itemGarantia1.config(state="normal")
-			
-	#parte final da garantia 
-	if( 0 < len(client_clone.list_equipments)):
-		if(client_clone.list_equipments[0].departureEquipmentWarranty!=None):
+
+	if(0 < len(client_clone.list_equipments)):
+		if(client_clone.list_equipments[0].entryEquipmentWarranty!=None):
+			timestamp_millis = client_clone.list_equipments[0].entryEquipmentWarranty
+			timestamp_seconds = timestamp_millis / 1000
+			date = datetime.fromtimestamp(timestamp_seconds)
+			formatted_date = date.strftime("%d/%m/%Y")
+			data_entrada = str(formatted_date+"  -                          ")
+			dataEntradaGarantia.config(state= "normal")
+			dataEntradaGarantia.insert(0, data_entrada)
+			dataEntradaGarantia.config(state= "readonly")
 			itemEntregue.select()
 			itemEntregue.config(state="disabled")
 		else:
+			dataEntradaGarantia.config(state= "normal")
+			dataEntradaGarantia.delete(0,'end')
+			dataEntradaGarantia.insert(0, '')
+			dataEntradaGarantia.config(state= "readonly")
 			itemEntregue.deselect()
 			itemEntregue.config(state="normal")
+
+	#parte final da garantia 
+	# if( 0 < len(client_clone.list_equipments)):
+	# 	if(client_clone.list_equipments[0].departureEquipmentWarranty!=None):
+			
+	# 		timestamp_millis = client_clone.list_equipments[0].departureEquipmentWarranty
+	# 		timestamp_seconds = timestamp_millis / 1000
+	# 		date = datetime.fromtimestamp(timestamp_seconds)
+	# 		formatted_date = date.strftime("%d/%m/%Y")
+	# 		data_saida = str(formatted_date+"  -                          ")
+	# 		dataSaidaGarantia.config(state= "normal")
+	# 		dataSaidaGarantia.delete(0,'end')
+	# 		dataSaidaGarantia.insert(0, data_saida)
+	# 		dataSaidaGarantia.config(state= "readonly")
+	# 	else:
+	# 		dataSaidaGarantia.config(state= "normal")
+	# 		dataSaidaGarantia.delete(0,'end')
+	# 		dataSaidaGarantia.insert(0, '')
+	# 		dataSaidaGarantia.config(state= "readonly")
 
 	textObs.delete("1.0", "end")
 	if( 0 < len(client_clone.list_equipments)):
@@ -397,17 +466,17 @@ def cb(event):
 	if( 0 < len(client_clone.list_equipments)):
 		if(client_clone.list_equipments[0].entregue==True):
 			item_entregue.select()
-			entryName.config(state='readonly')
-			eTelefone.config(state='readonly')
-			eEmail.config(state='readonly')
-			endereco.config(state='readonly')
-			eCPF.config(state='readonly')
-			eAparelhoModelo.config(state='readonly')
-			eAparelhoSerial.config(state='readonly')
-			eAparelhoMarca.config(state='readonly')
-			eAparelhoDefeito.config(state='readonly')
-			eAparelhoPreco.config(state='readonly')
-			textObs.config(state='disabled')
+			# entryName.config(state='readonly')
+			# eTelefone.config(state='readonly')
+			# eEmail.config(state='readonly')
+			# endereco.config(state='readonly')
+			# eCPF.config(state='readonly')
+			# eAparelhoModelo.config(state='readonly')
+			# eAparelhoSerial.config(state='readonly')
+			# eAparelhoMarca.config(state='readonly')
+			# eAparelhoDefeito.config(state='readonly')
+			# eAparelhoPreco.config(state='readonly')
+			# textObs.config(state='disabled')
 		else:
 			item_entregue.deselect()
 			entryName.config(state='normal')
@@ -423,7 +492,7 @@ def cb(event):
 			textObs.config(state='normal')
 
 listbox.bind('<<ListboxSelect>>', cb)
-
+eAparelhoPreco.insert(0,"0.00")
 def clear_fields():
 	entryName.config(state='normal')
 	eTelefone.config(state='normal')

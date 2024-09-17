@@ -155,9 +155,22 @@ def do_save():
 					
 					eAparelhoPreco.config(bg='white')
 					entryName.config(bg='white')
-					equipment.id = equipment_create(equipment)
+					data = equipment_create(equipment)
+					equipment.id =data.get("id")
+					print("aqui aqui aqui aqui aqui ")
+					print(data.get("entryDate"))
+					
+					equipment.entryDate = data.get("entryDate")
+					
+					timestamp_millis = equipment.entryDate
+					timestamp_seconds = timestamp_millis / 1000
+					date = datetime.fromtimestamp(timestamp_seconds)
+					formatted_date = date.strftime("%d/%m/%Y")
+					data_entrada = str(formatted_date+"  -                          ")
+					dataEntrada.config(text = data_entrada)
 					client_clone.list_equipments.append(equipment)
 					flag_novo = False
+					listbox.select_set(0)
 				else:
 					eAparelhoPreco.config(bg='yellow')
 					if(entryName.get()!=''):
@@ -211,8 +224,19 @@ def do_save():
 				dataSaida.config(text= data_saidaAux)
 			else:
 				dataSaida.config(text= '')
-
-
+					
+		if( 0 < len(client_clone.list_equipments)):
+			if(data.get("entryData")!=None):
+				client_clone.list_equipments[0].entryDate = data.get("entryData")
+				timestamp_millis = client_clone.list_equipments[0].entryDate
+				timestamp_seconds = timestamp_millis / 1000
+				date = datetime.fromtimestamp(timestamp_seconds)
+				formatted_date = date.strftime("%d/%m/%Y")
+				data_entrada = str(formatted_date+"  -                          ")
+				dataEntrada.config(text = data_entrada)
+			else:
+				print("ERRO ---  ")
+				
 Label(master, text='').grid(row=0)
 Label(master, text='').grid(row=1)
 Label(master, bg="white", fg='#f00',text='OS').grid(row=2,column=0)
@@ -420,44 +444,44 @@ def cb(event):
 			itemGarantia1.deselect()
 			itemGarantia1.config(state="normal")
 
-	if(0 < len(client_clone.list_equipments)):
-		if(client_clone.list_equipments[0].entryEquipmentWarranty!=None):
-			timestamp_millis = client_clone.list_equipments[0].entryEquipmentWarranty
-			timestamp_seconds = timestamp_millis / 1000
-			date = datetime.fromtimestamp(timestamp_seconds)
-			formatted_date = date.strftime("%d/%m/%Y")
-			data_entrada = str(formatted_date+"  -                          ")
-			dataEntradaGarantia.config(state= "normal")
-			dataEntradaGarantia.insert(0, data_entrada)
-			dataEntradaGarantia.config(state= "readonly")
-			itemEntregue.select()
-			itemEntregue.config(state="disabled")
-		else:
-			dataEntradaGarantia.config(state= "normal")
-			dataEntradaGarantia.delete(0,'end')
-			dataEntradaGarantia.insert(0, '')
-			dataEntradaGarantia.config(state= "readonly")
-			itemEntregue.deselect()
-			itemEntregue.config(state="normal")
-
-	#parte final da garantia 
-	# if( 0 < len(client_clone.list_equipments)):
-	# 	if(client_clone.list_equipments[0].departureEquipmentWarranty!=None):
-			
-	# 		timestamp_millis = client_clone.list_equipments[0].departureEquipmentWarranty
+	# if(0 < len(client_clone.list_equipments)):
+	# 	if(client_clone.list_equipments[0].entryEquipmentWarranty!=None):
+	# 		timestamp_millis = client_clone.list_equipments[0].entryEquipmentWarranty
 	# 		timestamp_seconds = timestamp_millis / 1000
 	# 		date = datetime.fromtimestamp(timestamp_seconds)
 	# 		formatted_date = date.strftime("%d/%m/%Y")
-	# 		data_saida = str(formatted_date+"  -                          ")
-	# 		dataSaidaGarantia.config(state= "normal")
-	# 		dataSaidaGarantia.delete(0,'end')
-	# 		dataSaidaGarantia.insert(0, data_saida)
-	# 		dataSaidaGarantia.config(state= "readonly")
+	# 		data_entrada = str(formatted_date+"  -                          ")
+	# 		dataEntradaGarantia.config(state= "normal")
+	# 		dataEntradaGarantia.insert(0, data_entrada)
+	# 		dataEntradaGarantia.config(state= "readonly")
+	# 		itemEntregue.select()
+	# 		itemEntregue.config(state="disabled")
 	# 	else:
-	# 		dataSaidaGarantia.config(state= "normal")
-	# 		dataSaidaGarantia.delete(0,'end')
-	# 		dataSaidaGarantia.insert(0, '')
-	# 		dataSaidaGarantia.config(state= "readonly")
+	# 		dataEntradaGarantia.config(state= "normal")
+	# 		dataEntradaGarantia.delete(0,'end')
+	# 		dataEntradaGarantia.insert(0, '')
+	# 		dataEntradaGarantia.config(state= "readonly")
+	# 		itemEntregue.deselect()
+	# 		itemEntregue.config(state="normal")
+
+	#parte final da garantia 
+	if( 0 < len(client_clone.list_equipments)):
+		if(client_clone.list_equipments[0].departureEquipmentWarranty!=None):
+			
+			timestamp_millis = client_clone.list_equipments[0].departureEquipmentWarranty
+			timestamp_seconds = timestamp_millis / 1000
+			date = datetime.fromtimestamp(timestamp_seconds)
+			formatted_date = date.strftime("%d/%m/%Y")
+			data_saida = str(formatted_date+"  -                          ")
+			dataSaidaGarantia.config(state= "normal")
+			dataSaidaGarantia.delete(0,'end')
+			dataSaidaGarantia.insert(0, data_saida)
+			dataSaidaGarantia.config(state= "readonly")
+		else:
+			dataSaidaGarantia.config(state= "normal")
+			dataSaidaGarantia.delete(0,'end')
+			dataSaidaGarantia.insert(0, '')
+			dataSaidaGarantia.config(state= "readonly")
 
 	textObs.delete("1.0", "end")
 	if( 0 < len(client_clone.list_equipments)):

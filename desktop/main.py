@@ -223,6 +223,7 @@ def do_save():
 				formatted_date = date.strftime("%d/%m/%Y")
 				data_saidaAux = str(formatted_date+"  -                            ")
 				dataSaida.config(text= data_saidaAux)
+				item_entregue.config(state='disable')
 			else:
 				dataSaida.config(text= '')
 					
@@ -246,8 +247,10 @@ def do_save():
 				formatted_date = date.strftime("%d/%m/%Y")
 				data_entrada = str(formatted_date+"  -                          ")
 				dataEntradaGarantia.config(state= "normal")
+				dataEntradaGarantia.delete(0, 'end')
 				dataEntradaGarantia.insert(0, data_entrada)
 				dataEntradaGarantia.config(state= "readonly")
+				itemGarantia1.config(state="disabled")
 				#itemEntregue.select()
 				#itemEntregue.config(state="disabled")
 		

@@ -224,6 +224,7 @@ def do_save():
 				data_saidaAux = str(formatted_date+"  -                            ")
 				dataSaida.config(text= data_saidaAux)
 				item_entregue.config(state='disable')
+				disabled()
 			else:
 				dataSaida.config(text= '')
 					
@@ -452,7 +453,7 @@ def cb(event):
 			data_saida_cast = str(formatted_date+"  -                             ")
 			
 			dataSaida.config(text= data_saida_cast)
-			
+			disabled()
 	if( 0 < len(client_clone.list_equipments)):
 		if(client_clone.list_equipments[0].devolucao == True):
 			itemDevolucao.select()
@@ -587,11 +588,25 @@ def clear_fields():
 	itemAutorizado.deselect()
 	item_entregue.deselect()
 	itemGarantia1.deselect()
-	itemPronto.config
-
+	dataEntrada.config(text='')
+	dataSaida.config(text='')
+	dataEntradaGarantia.config(state= "normal")
+	dataEntradaGarantia.delete(0,END)
+	dataEntradaGarantia.config(state= "disabled")
+	dataSaidaGarantia.config(state= "normal")
+	dataSaidaGarantia.delete(0,END)
+	dataSaidaGarantia.config(state= "disabled")
+	itemAutorizado.config(state=NORMAL)
+	item_entregue.config(state=NORMAL)
+	itemDevolucao.config(state=NORMAL)
+	itemEntregueGarantia.config(state=NORMAL)
+	itemPronto.config(state=NORMAL)
+	itemGarantia1.config(state=NORMAL)
+	itemEntregueGarantia.config(state=NORMAL)
+	itemEntregueGarantia.deselect()
 def disabled():
 	itemAutorizado.config(state='disabled')
-	itemEntregue.config(state='disabled')
+	
 	item_entregue.config(state='disabled')
 	itemDevolucao.config(state='disabled')
 	itemPronto.config(state='disabled')

@@ -284,7 +284,7 @@ Label(master, text='Telefone').grid(row=2,column=1)
 Label(master, text='Endereço').grid(row=1,column=2)
 Label(master, text='Email').grid(row=0,column=3)
 
-Label(master, text='CAD').grid(row=3,column=1)
+Label(master, text='  ').grid(row=3,column=1)
 Label(master, text='Aparelho').grid(row=4,column=1)
 Label(master, text='Modelo').grid(row=5,column=1)
 Label(master, text='Serial').grid(row=6,column=1)
@@ -454,6 +454,14 @@ def cb(event):
 			
 			dataSaida.config(text= data_saida_cast)
 			disabled()
+		else:
+			itemAutorizado.config(state=NORMAL)
+			item_entregue.config(state=NORMAL)
+			itemDevolucao.config(state=NORMAL)
+			itemEntregueGarantia.config(state=NORMAL)
+			itemPronto.config(state=NORMAL)
+			itemGarantia1.config(state=NORMAL)
+			itemEntregueGarantia.config(state=NORMAL)
 	if( 0 < len(client_clone.list_equipments)):
 		if(client_clone.list_equipments[0].devolucao == True):
 			itemDevolucao.select()

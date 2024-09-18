@@ -140,7 +140,7 @@ def do_save():
 			equipment.brand = eAparelhoMarca.get()
 			equipment.defectForRepair = eAparelhoDefeito.get()
 			equipment.obs = textObs.get("1.0",END)
-
+			equipment.description = eAparelho.get()
 			if(entryName.get()==''):
 				entryName.config(bg='yellow')
 				messagebox.showwarning ('Aviso!', 'É necessário ao menos o cadastro do nome do cliente!') 
@@ -150,6 +150,7 @@ def do_save():
 					equipment.id_client = id_client
 					list_clients.insert(0,client)
 					equipment.price = float(eAparelhoPreco.get())
+					client.id = id_client
 					client_clone = 	client
 					listbox.insert(0,id_client)
 					
@@ -180,6 +181,7 @@ def do_save():
 		global aux_client
 		indices_selecionados = listbox.curselection()
 		client_clone.id = listbox.get(indices_selecionados[0])
+	
 		print("client_clone id = ",client_clone.id)
 		client_clone.name = entryName.get()
 		client_clone.cpf = eCPF.get()
@@ -193,12 +195,13 @@ def do_save():
 
 	
 		if(len(client_clone.list_equipments) > 0):
+			client_clone.list_equipments[0].description = eAparelho.get()
 			client_clone.list_equipments[0].brand = eAparelhoMarca.get()
 			client_clone.list_equipments[0].defectForRepair = eAparelhoDefeito.get()
 			client_clone.list_equipments[0].price = eAparelhoPreco.get()
 			client_clone.list_equipments[0].model =eAparelhoModelo.get()
 			client_clone.list_equipments[0].obs = textObs.get("1.0",END)
-
+			client_clone.list_equipments[0].serial = eAparelhoSerial.get()
 			client_clone.list_equipments[0].autorizado =  get_state_autorizado()
 			client_clone.list_equipments[0].devolucao =  get_state_devolucao()
 			client_clone.list_equipments[0].pronto =  get_sate_pronto()
@@ -271,7 +274,10 @@ def do_save():
 					itemEntregueGarantia.select()
 					itemEntregueGarantia.config(state="disabled")
 				
-				print("departuretWarranty == entrou")
+		if(0<len(client_clone.list_equipments)):
+			if(data.get("description")!=None):
+				entryName.delete(0, 'end')
+				eAparelho.insert(0,client_clone.list_equipments[0].description)
 				#set garantia pronta e entregue
 		
 			
@@ -284,7 +290,8 @@ Label(master, text='Telefone').grid(row=2,column=1)
 Label(master, text='Endereço').grid(row=1,column=2)
 Label(master, text='Email').grid(row=0,column=3)
 
-Label(master, text='  ').grid(row=3,column=1)
+idCad=Label(master, text='')
+idCad.grid(row=3,column=1)
 Label(master, text='Aparelho').grid(row=4,column=1)
 Label(master, text='Modelo').grid(row=5,column=1)
 Label(master, text='Serial').grid(row=6,column=1)
@@ -320,7 +327,7 @@ dataSaida = Label(master,text=str(data_saida))
 dataSaida.grid(row=9,column=2)
 eAparelho = Entry(master)
 eAparelho.grid(row=4,column=2)
-eAparelho.insert(0,"E6")
+#eAparelho.insert(0,"E6")
 
 
 entryName.grid(row=0, column=2)
@@ -379,19 +386,8 @@ buttonAparelhoNovo.grid(row=11,column=5)
 buttonAparelhoOs=Button(master,command=imprimir_os, text="Imprimir")
 buttonAparelhoOs.grid(row=11,column=6)
 
-def cb(event):
-	global flag_novo 
-	flag_novo = False
-	
-	obj_client = listbox.curselection()
-
-	global aux_client
-	aux_client = str(obj_client).replace(")","",2).replace("(","",2).replace(",","",2)
-	
+def set_client():
 	global client_clone 
-	client_clone = list_clients[int(aux_client)]
-
-	client_clone.id = aux_client
 	entryName.delete(0, 'end')
 	entryName.insert(0,client_clone.name)
 	
@@ -410,10 +406,9 @@ def cb(event):
 	
 	eTelefone.delete(0,'end')
 	eTelefone.insert(0,client_clone.telefone)
-	
-	#busca aparelho by id
-	# arrumar aqui
-	
+
+def set_equipment():
+	global client_clone 
 	if( 0 < len(client_clone.list_equipments)):
 		eAparelhoModelo.delete(0,'end')
 		eAparelhoModelo.insert(0,client_clone.list_equipments[0].model)
@@ -428,6 +423,14 @@ def cb(event):
 		if(client_clone.list_equipments[0].defectForRepair != None):
 			eAparelhoDefeito.delete(0,'end')
 			eAparelhoDefeito.insert(0,client_clone.list_equipments[0].defectForRepair)
+
+	if( 0 < len(client_clone.list_equipments)):
+		if(client_clone.list_equipments[0].description==None):
+			eAparelho.delete(0,'end')
+			print(client_clone.list_equipments[0].description)
+		else:
+			eAparelho.delete(0,'end')
+			eAparelho.insert(0,client_clone.list_equipments[0].description)
 
 	if( 0 < len(client_clone.list_equipments)):
 		eAparelhoPreco.delete(0,'end')
@@ -559,14 +562,36 @@ def cb(event):
 			eEmail.config(state='normal')
 			endereco.config(state='normal')
 			eCPF.config(state='normal')
+			eAparelho.config(state='normal')
 			eAparelhoModelo.config(state='normal')
 			eAparelhoSerial.config(state='normal')
 			eAparelhoMarca.config(state='normal')
 			eAparelhoDefeito.config(state='normal')
 			eAparelhoPreco.config(state='normal')
 			textObs.config(state='normal')
+def select_from_list_box(event):
+	global flag_novo 
+	flag_novo = False
+	clear_fields()
+	
+	obj_client = listbox.curselection()
+	global aux_client
+	aux_client = str(obj_client).replace(")","",2).replace("(","",2).replace(",","",2)
+	
+	global client_clone 
+	client_clone = list_clients[int(aux_client)]
 
-listbox.bind('<<ListboxSelect>>', cb)
+	
+	texto = "ID "+str(client_clone.id)
+	idCad.config(text=texto)
+	
+
+	set_client()
+	set_equipment()
+
+	
+
+listbox.bind('<<ListboxSelect>>', select_from_list_box)
 eAparelhoPreco.insert(0,"0.00")
 def clear_fields():
 	entryName.config(state='normal')
@@ -612,6 +637,7 @@ def clear_fields():
 	itemGarantia1.config(state=NORMAL)
 	itemEntregueGarantia.config(state=NORMAL)
 	itemEntregueGarantia.deselect()
+	eAparelho.config(state=NORMAL)
 def disabled():
 	itemAutorizado.config(state='disabled')
 	
@@ -623,6 +649,7 @@ def disabled():
 	eEmail.config(state='readonly')
 	endereco.config(state='readonly')
 	eCPF.config(state='readonly')
+	eAparelho.config(state='readonly')
 	eAparelhoModelo.config(state='readonly')
 	eAparelhoSerial.config(state='readonly')
 	eAparelhoMarca.config(state='readonly')

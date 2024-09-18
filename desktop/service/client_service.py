@@ -40,6 +40,7 @@ def client_find_all():
                 equipment.garantia = e1["garantia"]
                 equipment.departureEquipmentWarranty = e1["departureEquipmentWarranty"]
                 equipment.entryEquipmentWarranty = e1["entryEquipmentWarranty"]
+                equipment.description = e1["description"]
                 client.list_equipments.append(equipment)
         list_client.append(client)
         #print(client.list_equipments)

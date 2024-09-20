@@ -25,7 +25,9 @@ def equipment_update(equipment):
              'entregue':equipment.entregue,
              'garantia':equipment.garantia,
              'departureEquipmentWarranty':equipment.departureEquipmentWarranty,
-             'departuretWarranty':equipment.departuretWarranty
+             'departuretWarranty':equipment.departuretWarranty,
+             'entryEquipmentWarranty':equipment.entryEquipmentWarranty,
+             'description':equipment.description
              }
     x = requests.post(url, json = myobj)
     return x.json()
@@ -44,7 +46,8 @@ def equipment_create(equipment):
              'devolucao':equipment.devolucao,
              'pronto':equipment.pronto,
              'entregue':equipment.entregue,
-             'idClient':equipment.id_client
+             'idClient':equipment.id_client,
+             'description':equipment.description
              }
     x = requests.post(url, json = myobj)
-    return x.json().get('id')
+    return x.json() 

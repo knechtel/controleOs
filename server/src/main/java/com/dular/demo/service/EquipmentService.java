@@ -4,6 +4,7 @@ import com.dular.demo.repository.EquipmentDao;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,13 +28,14 @@ public class EquipmentService {
         return equipmentDao.findById(id).orElse(null);
     }
 
-    public void update(Equipment equipment) {
+    public Equipment update(Equipment equipment) {
+        System.out.println("out id = "+equipment.getId());
         if (equipment.getId() == null) {
-            return;
+            System.out.println("out id = "+equipment.getId());
         }
         Equipment equipmentEdit = equipmentDao.findById(equipment.getId()).orElse(null);
-//        if (equipment.getBrand() != null)
-//            equipmentEdit.setBrand(equipment.getBrand());
+        if (equipment.getBrand() != null)
+            equipmentEdit.setBrand(equipment.getBrand());
 
         if (equipment.getModel() != null)
             equipmentEdit.setModel(equipment.getModel());
@@ -46,6 +48,8 @@ public class EquipmentService {
 //
         if (equipment.getDefectForRepair() != null)
             equipmentEdit.setDefectForRepair(equipment.getDefectForRepair());
+        if (equipment.getDefectDefectForRepair() != null)
+            equipmentEdit.setDefectDefectForRepair(equipment.getDefectDefectForRepair());
 //
         if (equipment.isAutorizado())
             equipmentEdit.setAutorizado(equipment.isAutorizado());
@@ -55,7 +59,34 @@ public class EquipmentService {
             equipmentEdit.setPronto(equipment.isPronto());
         else
             equipmentEdit.setPronto(false);
-        equipmentDao.save(equipmentEdit);
+
+        if(equipment.getObs()!=null)
+            equipmentEdit.setObs(equipment.getObs());
+        equipmentEdit.setPrice(equipment.getPrice());
+
+        if(equipment.isDevolucao())
+            equipmentEdit.setDevolucao(true);
+        else
+            equipmentEdit.setDevolucao(false);
+
+        if(equipment.getEntregue()!=null&&equipment.getEntregue()) {
+            equipmentEdit.setEntregue(true);
+            equipmentEdit.setDepartureDate(new Date());
+        }else {
+            equipmentEdit.setEntregue(false);
+        }
+        if(equipment.isGarantia()) {
+            equipmentEdit.setGarantia(true);
+            equipmentEdit.setEntryEquipmentWarranty(new Date());
+        }
+        if(equipment.getDepartureEquipmentWarranty()!=null){
+            equipmentEdit.setDepartureEquipmentWarranty(equipment.getDepartureEquipmentWarranty());
+        }
+        if(equipment.getDescription()!=null)
+            equipmentEdit.setDescription(equipment.getDescription());
+        equipmentEdit.setEntregue(equipment.getEntregue());
+        System.out.println("Entregue = "+equipment.getEntregue());
+        return equipmentDao.save(equipmentEdit);
     }
 
     public void delete(Equipment equipment) {

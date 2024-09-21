@@ -20,10 +20,12 @@ public class ClientController {
     @CrossOrigin(origins = "http://127.0.0.1:5173")
     @PostMapping(value = "client-create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Client create(@RequestBody ClientDto clientDto){
+
         return clientService.create(clientDto.toBuild(clientDto));
     }
     @PostMapping(value = "client-update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void update(@RequestBody ClientDto clientDto){
+        System.out.println("aqui auqi aquiiiiiiii address = "+clientDto.getAddress());
         clientService.update(clientDto.toBuild(clientDto));
     }
     @RequestMapping(value = "client-findAll", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)

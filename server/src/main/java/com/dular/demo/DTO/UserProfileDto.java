@@ -44,4 +44,11 @@ public class UserProfileDto {
         }
         return userProfile;
     }
+
+    public UserProfileDto toDto(UserProfile userProfile){
+        UserProfileDto user = new UserProfileDto();
+        user.setLogin(userProfile.getLogin());
+        user.setPassword(userProfile.getPassword());
+        return user;
+    }
 }

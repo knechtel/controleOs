@@ -37,8 +37,8 @@ public class EquipmentController {
     }
 
     @RequestMapping(value = "equipment-update", consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public void update(@RequestBody EquipmentDto equipmentDto){
-        equipmentService.update(equipmentDto.toBuildUpdate(equipmentDto));
+    public Equipment update(@RequestBody EquipmentDto equipmentDto){
+        return equipmentService.update(equipmentDto.toBuildUpdate(equipmentDto));
     }
     @PostMapping(value = "equipment-delete", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void delete(@RequestBody EquipmentDto equipmentDto){

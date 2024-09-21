@@ -22,7 +22,7 @@ public class Equipment {
     private Client client;
     private Date entryDate;
     private Date departureDate;
-
+    private String description;
     private Date entryEquipmentWarranty;
     private Date departureEquipmentWarranty;
     private Double costValue;
@@ -32,6 +32,7 @@ public class Equipment {
     private String obs;
     private Boolean entregue;
     private boolean devolucao;
+    private boolean garantia;
     public Equipment(Client client) {
         this.client = client;
     }
@@ -182,5 +183,21 @@ public class Equipment {
 
     public void setEntregue(Boolean entergue) {
         this.entregue = entergue;
+    }
+
+    public boolean isGarantia() {
+        return garantia;
+    }
+
+    public void setGarantia(boolean garantia) {
+        this.garantia = garantia;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

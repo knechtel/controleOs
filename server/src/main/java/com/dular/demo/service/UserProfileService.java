@@ -1,5 +1,6 @@
 package com.dular.demo.service;
 
+import com.dular.demo.DTO.UserProfileDto;
 import com.dular.demo.domain.UserProfile;
 import com.dular.demo.repository.UserProfileDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,9 @@ public class UserProfileService {
 
     public void delete(Integer id) {
         userProfileDao.deleteById(id);
+    }
+
+    public UserProfile findByLoginAndPassword(UserProfileDto userProfile){
+        return userProfileDao.findByLoginAndPassword(userProfile.getLogin(), userProfile.getPassword());
     }
 }

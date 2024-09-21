@@ -16,6 +16,8 @@ public class ClientDto {
 
     private String phone;
 
+    private String address;
+
     public Client toBuild(ClientDto clientDto) {
         Client entity = new Client();
         if (id != null) {
@@ -29,6 +31,8 @@ public class ClientDto {
             entity.setCpf(cpf);
         if(phone!=null)
             entity.setPhone(phone);
+
+        entity.setAddress(address);
 
         return entity;
     }
@@ -71,5 +75,13 @@ public class ClientDto {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

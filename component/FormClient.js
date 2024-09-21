@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import React, { useState } from "react";
 import {
   View,
@@ -8,14 +9,43 @@ import {
   ScrollView,
   Text,
 } from "react-native";
+import { FIND_BY_ID_CLIENT } from "../util/urls";
 
-const FormClient = () => {
+const FormClient = ({ route, navigation }) => {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [endereco, setEndereco] = useState("");
-
+  const redirect = () => {
+    navigation.navigate("FormClient", { paramKey: 0 });
+  };
+  useEffect(() => {
+    // Código que será executado na inicialização do componente
+    console.log("Componente montado ! " + route.params.paramKey);
+    idClient = route.params.paramKey;
+    fetch(FIND_BY_ID_CLIENT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: idClient,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        setEmail(json["email"]);
+        setNome(json["name"]);
+        setEndereco(json["address"]);
+        setCpf(json["cpf"]);
+        setTelefone(json["phone"]);
+      });
+    // O retorno do useEffect (opcional) seria executado quando o componente for desmontado
+    return () => {
+      console.log("Componente desmontado!");
+    };
+  }, []);
   const handleSubmit = () => {
     // Aqui você pode adicionar lógica para processar ou enviar os dados
     Alert.alert(
@@ -65,8 +95,15 @@ const FormClient = () => {
         value={endereco}
         onChangeText={setEndereco}
       />
-
       <Button title="Enviar" onPress={handleSubmit} />
+      <View style={styles.container}>
+        <Button
+          title="Equipamento"
+          onPress={redirect}
+          color="#841584"
+          style={styles.button}
+        />
+      </View>
     </ScrollView>
   );
 };
@@ -90,6 +127,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingHorizontal: 10,
     borderRadius: 5,
+  },
+  button: {
+    justifyContent: "space-between",
+    padding: 20,
   },
 });
 

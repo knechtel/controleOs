@@ -6,6 +6,7 @@ import {
   Alert,
   StyleSheet,
   ScrollView,
+  Text,
 } from "react-native";
 
 const FormClient = () => {
@@ -25,6 +26,7 @@ const FormClient = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Formulário de Cliente</Text>
       <TextInput
         style={styles.input}
         placeholder="Nome"
@@ -74,6 +76,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
   },
   input: {
     height: 40,

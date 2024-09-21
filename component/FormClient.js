@@ -13,17 +13,18 @@ import { FIND_BY_ID_CLIENT } from "../util/urls";
 
 const FormClient = ({ route, navigation }) => {
   const [nome, setNome] = useState("");
+  const [id, setId] = useState("");
   const [cpf, setCpf] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [endereco, setEndereco] = useState("");
   const redirect = () => {
-    navigation.navigate("FormClient", { paramKey: 0 });
+    navigation.navigate("Equipment", { paramKey: idClient });
   };
   useEffect(() => {
-    // Código que será executado na inicialização do componente
     console.log("Componente montado ! " + route.params.paramKey);
     idClient = route.params.paramKey;
+    setId(idClient);
     fetch(FIND_BY_ID_CLIENT, {
       method: "POST",
       headers: {

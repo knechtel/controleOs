@@ -576,16 +576,15 @@ def select_from_list_box(event):
 	
 	obj_client = listbox.curselection()
 	global aux_client
-	aux_client = str(obj_client).replace(")","",2).replace("(","",2).replace(",","",2)
 	
-	global client_clone 
-	client_clone = list_clients[int(aux_client)]
-
-	
-	texto = "ID "+str(client_clone.id)
-	idCad.config(text=texto)
-	
-
+	try:
+		aux_client = str(obj_client).replace(")","",2).replace("(","",2).replace(",","",2)
+		global client_clone 
+		client_clone = list_clients[int(aux_client)]
+		texto = "ID "+str(client_clone.id)
+		idCad.config(text=texto)
+	except ValueError:
+		print("Erro")
 	set_client()
 	set_equipment()
 

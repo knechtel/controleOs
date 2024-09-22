@@ -276,7 +276,7 @@ def do_save():
 				
 		if(0<len(client_clone.list_equipments)):
 			if(data.get("description")!=None):
-				entryName.delete(0, 'end')
+				eAparelho.delete(0,'end')
 				eAparelho.insert(0,client_clone.list_equipments[0].description)
 				#set garantia pronta e entregue
 		

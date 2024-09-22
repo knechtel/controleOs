@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import {
   Text,
   ScrollView,
@@ -19,7 +20,7 @@ class ClientList extends Component {
   }
   redirectToEdit = (id) => {
     const { navigation } = this.props;
-    navigation.navigate("Equipment", { paramKey: id });
+    navigation.navigate("FormClient", { paramKey: id });
   };
   _onRefresh = () => {
     this.setState({ refreshing: true });

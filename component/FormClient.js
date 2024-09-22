@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import React, { useState } from "react";
 import {
+  TouchableOpacity,
   View,
   TextInput,
   Button,
@@ -9,29 +10,27 @@ import {
   ScrollView,
   Text,
 } from "react-native";
-import { FIND_BY_ID_CLIENT } from "../util/urls";
 
-const FormClient = ({ route, navigation }) => {
+const FormClient = () => {
   const [nome, setNome] = useState("");
   const [id, setId] = useState("");
   const [cpf, setCpf] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [endereco, setEndereco] = useState("");
-  const redirect = () => {
-    navigation.navigate("Equipment", { paramKey: idClient });
-  };
-  useEffect(() => {
-    console.log("Componente montado ! " + route.params.paramKey);
-    idClient = route.params.paramKey;
-    setId(idClient);
-    fetch(FIND_BY_ID_CLIENT, {
+
+  const handleSubmit = () => {
+    fetch(UPDATE_CLIENT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: idClient,
+        id: id,
+        name: nome,
+        address: endereco,
+        cpf: String(cpf),
+        phone: telefone,
       }),
     })
       .then((response) => response.json())
@@ -42,17 +41,7 @@ const FormClient = ({ route, navigation }) => {
         setCpf(json["cpf"]);
         setTelefone(json["phone"]);
       });
-    // O retorno do useEffect (opcional) seria executado quando o componente for desmontado
-    return () => {
-      console.log("Componente desmontado!");
-    };
-  }, []);
-  const handleSubmit = () => {
-    // Aqui você pode adicionar lógica para processar ou enviar os dados
-    Alert.alert(
-      "Dados Enviados",
-      `Nome: ${nome}\nCPF: ${cpf}\nTelefone: ${telefone}\nEmail: ${email}\nEndereço: ${endereco}`
-    );
+    alert("Cliente editado com sucesso!");
   };
 
   return (
@@ -97,14 +86,6 @@ const FormClient = ({ route, navigation }) => {
         onChangeText={setEndereco}
       />
       <Button title="Enviar" onPress={handleSubmit} />
-      <View style={styles.container}>
-        <Button
-          title="Equipamento"
-          onPress={redirect}
-          color="#841584"
-          style={styles.button}
-        />
-      </View>
     </ScrollView>
   );
 };
@@ -128,10 +109,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingHorizontal: 10,
     borderRadius: 5,
-  },
-  button: {
-    justifyContent: "space-between",
-    padding: 20,
   },
 });
 

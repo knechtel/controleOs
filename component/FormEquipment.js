@@ -9,9 +9,17 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import { FIND_BY_ID_CLIENT, FIND_BY_ID_EQUIPMENT } from "../util/urls";
+import { Checkbox } from "react-native-paper";
+import {
+  FIND_BY_ID_CLIENT,
+  FIND_BY_ID_EQUIPMENT,
+  UPDATE_EQUIPMENT,
+} from "../util/urls";
 
 const FormEquipment = ({ route, navigation }) => {
+  const [id, setId] = useState();
+  const [entregue, setEntregue] = useState(false);
+  const [garantia, setGarantia] = useState(false);
   const [descricao, setDescricao] = useState("");
   const [modelo, setModelo] = useState("");
   const [serial, setSerial] = useState("");
@@ -21,8 +29,9 @@ const FormEquipment = ({ route, navigation }) => {
   // useEffect será executado quando o componente for montado
   useEffect(() => {
     // Código que será executado na inicialização do componente
-    console.log("Componente montado ! " + route.params.paramKey);
+    // console.log("Componente montado ! " + route.params.paramKey);
     idClient = route.params.paramKey;
+    setId(idClient);
     fetch(FIND_BY_ID_CLIENT, {
       method: "POST",
       headers: {
@@ -34,11 +43,14 @@ const FormEquipment = ({ route, navigation }) => {
     })
       .then((response) => response.json())
       .then((json) => {
-        console.log("=================================================");
-        console.log("=================================================");
-        console.log(json["equipments"][0]["id"]);
-        console.log("=================================================");
-        console.log("=================================================");
+        setDescricao(json["equipments"][0].description);
+        setGarantia(json["equipments"][0].garantia);
+        setEntregue(json["equipments"][0].entregue);
+        setModelo(json["equipments"][0].model);
+        setSerial(json["equipments"][0].serial);
+        setMarca(json["equipments"][0].brand);
+        setDefeito(json["equipments"][0]["defectDefectForRepair"]);
+        setPreco(String(json["equipments"][0]["price"]) + ".00");
       });
     // O retorno do useEffect (opcional) seria executado quando o componente for desmontado
     return () => {
@@ -51,7 +63,26 @@ const FormEquipment = ({ route, navigation }) => {
     console.log("Carregando dados...");
   };
   const handleSubmit = () => {
-    // Aqui você pode adicionar a lógica para enviar os dados do formulário para uma API ou banco de dados
+    fetch(UPDATE_EQUIPMENT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        description: descricao,
+        model: modelo,
+        serial: serial,
+        brand: marca,
+        defectDefectForRepair: defeito,
+        price: parseFloat(preco),
+        entregue: entregue,
+        garantia: garantia,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {});
+    alert("Equipamento editado com sucesso!");
   };
   const redirect = () => {
     navigation.navigate("FormClient", { paramKey: 0 });
@@ -99,13 +130,29 @@ const FormEquipment = ({ route, navigation }) => {
         style={styles.input}
         placeholder="Preço"
         value={preco}
-        onChangeText={setPreco}
+        onChangeText={(preco) => setPreco(preco)}
         keyboardType="numeric"
       />
 
+      <View style={{ padding: 10 }}>
+        <Checkbox
+          status={entregue ? "checked" : "unchecked"}
+          onPress={() => {
+            setEntregue(!entregue);
+          }}
+        />
+        <Text>Entregue</Text>
+      </View>
+      <View style={{ padding: 10 }}>
+        <Checkbox
+          status={garantia ? "checked" : "unchecked"}
+          onPress={() => {
+            setGarantia(!garantia);
+          }}
+        />
+        <Text>Garantia</Text>
+      </View>
       <Button title="Enviar" onPress={handleSubmit} />
-
-      <Button title="Detalhes Cliente." onPress={redirect} />
     </ScrollView>
   );
 };

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import React, { useState } from "react";
 import {
+  TouchableOpacity,
   View,
   TextInput,
   Button,
@@ -9,20 +10,19 @@ import {
   ScrollView,
   Text,
 } from "react-native";
-import { FIND_BY_ID_CLIENT } from "../util/urls";
+import { FIND_BY_ID_CLIENT, UPDATE_CLIENT } from "../util/urls";
+
 const FormClient = ({ route, navigation }) => {
+  const [id, setId] = useState("");
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [endereco, setEndereco] = useState("");
-  const redirect = () => {
-    navigation.navigate("FormClient", { paramKey: 0 });
-  };
+
   useEffect(() => {
-    // Código que será executado na inicialização do componente
-    console.log("Componente montado ! " + route.params.paramKey);
     idClient = route.params.paramKey;
+    setId(idClient);
     fetch(FIND_BY_ID_CLIENT, {
       method: "POST",
       headers: {
@@ -34,28 +34,44 @@ const FormClient = ({ route, navigation }) => {
     })
       .then((response) => response.json())
       .then((json) => {
-        console.log("=================================================");
-        console.log("=================================================");
-        console.log(json["equipments"][0]["id"]);
         setEmail(json["email"]);
         setNome(json["name"]);
         setEndereco(json["address"]);
         setCpf(json["cpf"]);
         setTelefone(json["phone"]);
-        console.log("=================================================");
-        console.log("=================================================");
       });
-    // O retorno do useEffect (opcional) seria executado quando o componente for desmontado
     return () => {
       console.log("Componente desmontado!");
     };
   }, []);
+
+  const redirect = () => {
+    navigation.navigate("Equipment", { paramKey: id });
+  };
+
   const handleSubmit = () => {
-    // Aqui você pode adicionar lógica para processar ou enviar os dados
-    Alert.alert(
-      "Dados Enviados",
-      `Nome: ${nome}\nCPF: ${cpf}\nTelefone: ${telefone}\nEmail: ${email}\nEndereço: ${endereco}`
-    );
+    fetch(UPDATE_CLIENT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        name: nome,
+        address: endereco,
+        cpf: String(cpf),
+        phone: telefone,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        setEmail(json["email"]);
+        setNome(json["name"]);
+        setEndereco(json["address"]);
+        setCpf(json["cpf"]);
+        setTelefone(json["phone"]);
+      });
+    alert("Cliente editado com sucesso!");
   };
 
   return (
@@ -100,13 +116,11 @@ const FormClient = ({ route, navigation }) => {
         onChangeText={setEndereco}
       />
       <Button title="Enviar" onPress={handleSubmit} />
-      <View style={styles.container}>
-        <Button
-          title="Equipamento"
-          onPress={redirect}
-          color="#841584"
-          style={styles.button}
-        />
+      <View style={stylesLink.container}>
+        <Text>Detalhes de equipamentos.</Text>
+        <TouchableOpacity onPress={redirect}>
+          <Text style={stylesLink.link}>Clique aqui</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -138,4 +152,15 @@ const styles = StyleSheet.create({
   },
 });
 
+const stylesLink = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  link: {
+    color: "blue",
+    textDecorationLine: "underline",
+  },
+});
 export default FormClient;

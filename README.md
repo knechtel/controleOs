@@ -24,15 +24,7 @@ Repositório para aplicação mobile
 https://github.com/knechtel/controle-os/tree/master
 
 
-<img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi2dPG0jUFr9S_WbzfOLb4mciXm6lhyEqczhe8VtKEOr6qzuaWX11WefGA6uGC08Y_vkIg4z_W08rNYRBnJbbavi2FDuhnZGPSK3u4qowVu6-la3bCoYw0QqTX_5m34X0VukcEeCUo9pke5bax4wBl-HTIiSawBGho6wOrIHKcw1P9xtodc0NfZmreUQ-vh/s1478/Screen%20Shot%202024-09-22%20at%2018.45.28.png" alt="Logo do Projeto" width="25%"/>
 
-
-
-Tela contendo lista de clientes do mais recente até o mais antigo:
-
-
-
-<img src="https://blogger.googleusercontent.com/img/a/AVvXsEiauiT-TUzBqtsc4qMNGy20Gv5F5-OfbqT7HJHXszZ_ljusykGIX2P5J5PaqwW-kHVnTnceitDkB-3gWkqmeHUtaz9DLhHbAUJmt6bxwL8T_GZxLlSqcZB5o0j6VUZ87hDST0GOsKVT2ak_rMh-mSl3ltis4sIFzvaicDnyqykcDF0P7yx9s3cWMudomYJs" alt="Logo do Projeto" width="25%"/>
 
 
 

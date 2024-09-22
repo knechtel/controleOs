@@ -19,6 +19,31 @@ const FormClient = () => {
   const [email, setEmail] = useState("");
   const [endereco, setEndereco] = useState("");
 
+
+  useEffect(() => {
+    idClient = route.params.paramKey;
+    setId(idClient);
+    fetch(FIND_BY_ID_CLIENT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: idClient,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        setEmail(json["email"]);
+        setNome(json["name"]);
+        setEndereco(json["address"]);
+        setCpf(json["cpf"]);
+        setTelefone(json["phone"]);
+      });
+    return () => {
+      console.log("Componente desmontado!");
+    };
+  }, []);
   const handleSubmit = () => {
     fetch(UPDATE_CLIENT, {
       method: "POST",

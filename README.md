@@ -10,7 +10,9 @@ Interface Desktop em Python TkInter
 
 Tela de login desenvolvido com React-Native
 
-![Android App]()
+Repositório para aplicação mobile
+
+https://github.com/knechtel/controle-os/tree/master
 
 
 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi2dPG0jUFr9S_WbzfOLb4mciXm6lhyEqczhe8VtKEOr6qzuaWX11WefGA6uGC08Y_vkIg4z_W08rNYRBnJbbavi2FDuhnZGPSK3u4qowVu6-la3bCoYw0QqTX_5m34X0VukcEeCUo9pke5bax4wBl-HTIiSawBGho6wOrIHKcw1P9xtodc0NfZmreUQ-vh/s1478/Screen%20Shot%202024-09-22%20at%2018.45.28.png" alt="Logo do Projeto" width="25%"/>

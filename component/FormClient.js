@@ -10,16 +10,20 @@ import {
   ScrollView,
   Text,
 } from "react-native";
-
-const FormClient = () => {
+import { FIND_BY_ID_CLIENT, UPDATE_CLIENT } from "../util/urls";
+redirectToEdit = (id) => {
+  navigation.navigate("Equipment", { paramKey: id });
+};
+const FormClient = ({ route, navigation }) => {
   const [nome, setNome] = useState("");
   const [id, setId] = useState("");
   const [cpf, setCpf] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [endereco, setEndereco] = useState("");
-
-
+  redirectToEdit = () => {
+    navigation.navigate("Equipment", { paramKey: id });
+  };
   useEffect(() => {
     idClient = route.params.paramKey;
     setId(idClient);
@@ -111,6 +115,12 @@ const FormClient = () => {
         onChangeText={setEndereco}
       />
       <Button title="Enviar" onPress={handleSubmit} />
+      <View style={stylesLink.container}>
+        <Text>Detalhes do Equipamento!</Text>
+        <TouchableOpacity onPress={redirectToEdit}>
+          <Text style={stylesLink.link}>Clique aqui</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };
@@ -136,5 +146,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
-
+const stylesLink = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  link: {
+    color: "blue",
+    textDecorationLine: "underline",
+  },
+});
 export default FormClient;

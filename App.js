@@ -31,10 +31,8 @@ const Login = ({ navigation }) => {
       })
         .then((response) => response.json())
         .then((json) => {
-          Alert.alert("Post Criado");
         });
 
-      Alert.alert("Login bem-sucedido", "Você entrou!");
       navigation.navigate("Client");
     } else {
       Alert.alert("Erro", "Usuário ou senha inválidos");

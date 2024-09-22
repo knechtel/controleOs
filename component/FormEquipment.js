@@ -31,6 +31,9 @@ const FormEquipment = ({ route, navigation }) => {
     // Código que será executado na inicialização do componente
     // console.log("Componente montado ! " + route.params.paramKey);
     idClient = route.params.paramKey;
+    console.log("=======================");
+    console.log(idClient);
+    console.log("=======================");
     setId(idClient);
     fetch(FIND_BY_ID_CLIENT, {
       method: "POST",

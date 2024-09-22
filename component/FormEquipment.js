@@ -34,7 +34,7 @@ const FormEquipment = ({ route, navigation }) => {
     console.log("=======================");
     console.log(idClient);
     console.log("=======================");
-    setId(idClient);
+
     fetch(FIND_BY_ID_CLIENT, {
       method: "POST",
       headers: {
@@ -54,6 +54,7 @@ const FormEquipment = ({ route, navigation }) => {
         setMarca(json["equipments"][0].brand);
         setDefeito(json["equipments"][0]["defectDefectForRepair"]);
         setPreco(String(json["equipments"][0]["price"]) + ".00");
+        setId(json["equipments"][0].id);
       });
     // O retorno do useEffect (opcional) seria executado quando o componente for desmontado
     return () => {
@@ -87,9 +88,7 @@ const FormEquipment = ({ route, navigation }) => {
       .then((json) => {});
     alert("Equipamento editado com sucesso!");
   };
-  const redirect = () => {
-    navigation.navigate("FormClient", { paramKey: 0 });
-  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Formulário de Equipamento</Text>

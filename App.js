@@ -5,13 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ClientList from "./component/ClientList";
 import FormEquipment from "./component/FormEquipment";
 import FormClient from "./component/FormClient";
-const DetailsScreen = () => {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Detalhes</Text>
-    </View>
-  );
-};
+
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -30,8 +24,7 @@ const Login = ({ navigation }) => {
         }),
       })
         .then((response) => response.json())
-        .then((json) => {
-        });
+        .then((json) => {});
 
       navigation.navigate("Client");
     } else {
@@ -69,7 +62,6 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={Login} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen name="Client" component={ClientList} />
         <Stack.Screen name="Equipment" component={FormEquipment} />
         <Stack.Screen name="FormClient" component={FormClient} />

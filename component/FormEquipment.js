@@ -10,11 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Checkbox } from "react-native-paper";
-import {
-  FIND_BY_ID_CLIENT,
-  FIND_BY_ID_EQUIPMENT,
-  UPDATE_EQUIPMENT,
-} from "../util/urls";
+import { FIND_BY_ID_CLIENT, UPDATE_EQUIPMENT } from "../util/urls";
 
 const FormEquipment = ({ route, navigation }) => {
   const [id, setId] = useState();
@@ -28,12 +24,7 @@ const FormEquipment = ({ route, navigation }) => {
   const [preco, setPreco] = useState("");
   // useEffect será executado quando o componente for montado
   useEffect(() => {
-    // Código que será executado na inicialização do componente
-    // console.log("Componente montado ! " + route.params.paramKey);
     idClient = route.params.paramKey;
-    console.log("=======================");
-    console.log(idClient);
-    console.log("=======================");
 
     fetch(FIND_BY_ID_CLIENT, {
       method: "POST",

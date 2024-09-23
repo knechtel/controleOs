@@ -55,6 +55,7 @@ const FormEquipment = ({ route, navigation }) => {
         setDefeito(json["equipments"][0]["defectDefectForRepair"]);
         setPreco(String(json["equipments"][0]["price"]) + ".00");
         setId(json["equipments"][0].id);
+        console.log("id  = " + id);
       });
     // O retorno do useEffect (opcional) seria executado quando o componente for desmontado
     return () => {
@@ -78,7 +79,7 @@ const FormEquipment = ({ route, navigation }) => {
         model: modelo,
         serial: serial,
         brand: marca,
-        defectDefectForRepair: defeito,
+        defectForRepair: defeito,
         price: parseFloat(preco),
         entregue: entregue,
         garantia: garantia,

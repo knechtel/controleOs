@@ -60,6 +60,7 @@ const FormClient = ({ route, navigation }) => {
         address: endereco,
         cpf: String(cpf),
         phone: telefone,
+        email: email,
       }),
     })
       .then((response) => response.json())
@@ -89,7 +90,7 @@ const FormClient = ({ route, navigation }) => {
         value={cpf}
         onChangeText={setCpf}
         keyboardType="numeric"
-        maxLength={11} // Limita o número de caracteres do CPF a 11
+        maxLength={15} // Limita o número de caracteres do CPF a 11
       />
 
       <TextInput

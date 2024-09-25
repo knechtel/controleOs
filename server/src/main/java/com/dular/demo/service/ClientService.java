@@ -43,6 +43,9 @@ public class ClientService {
             clientEdit.setName(client.getName());
         if(client.getAddress()!=null)
             clientEdit.setAddress(client.getAddress());
+        if(client.getPhone()!=null)
+            clientEdit.setPhone(client.getPhone());
+
         clientDao.save(clientEdit);
     }
 

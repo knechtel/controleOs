@@ -1,19 +1,29 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  Alert,
+  StyleSheet,
+  Image,
+  Dimensions,
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+
 import ClientList from "./component/ClientList";
 import FormEquipment from "./component/FormEquipment";
 import FormClient from "./component/FormClient";
-
-
+import { FIND_USER } from "./util/urls";
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
     if (username === "admin" && password === "1234") {
-      fetch("http://10.0.0.199:8080/user-find", {
+      fetch(FIND_USER, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,8 +44,11 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login </Text>
-
+      <Text style={styles.title}>Eletrônica São José </Text>
+      <Image
+        source={require("./assets/eletronicaLogo.png")} // Substitua pela URL da sua imagem ou use require para imagens locais
+        style={styles.headerImage} // Estilo da imagem
+      />
       <TextInput
         style={styles.input}
         placeholder="Usuário"
@@ -75,6 +88,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 20,
+  },
+  headerImage: {
+    width: SCREEN_WIDTH * 0.9, // Largura da imagem
+    //  height: SCREEN_HEIGHT, // Altura da imagem
+    //  borderRadius: 25, // Deixa a imagem redonda, caso seja quadrada
+    marginBottom: 10, // Espaço entre a imagem e o texto
+    //  marginHorizontal: SCREEN_WIDTH * 0.1,
   },
   title: {
     fontSize: 24,

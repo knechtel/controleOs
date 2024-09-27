@@ -108,7 +108,9 @@ def get_sate_pronto():
 		return False
 
 def imprimir_os():
-	webbrowser.open("https://www.google.com")  
+	id = str(client_clone.id)
+	address = "http://localhost:8080/download?id="+id
+	webbrowser.open(address)
 
 def novo_os():
 	clear_fields()
@@ -180,8 +182,12 @@ def do_save():
 	else:
 		global aux_client
 		indices_selecionados = listbox.curselection()
-		client_clone.id = listbox.get(indices_selecionados[0])
-	
+		print(indices_selecionados)
+		try:
+			if(indices_selecionados):
+				client_clone.id = listbox.get(indices_selecionados[0])
+		except ValueError:
+			print("erro")
 		print("client_clone id = ",client_clone.id)
 		client_clone.name = entryName.get()
 		client_clone.cpf = eCPF.get()
@@ -276,7 +282,7 @@ def do_save():
 				
 		if(0<len(client_clone.list_equipments)):
 			if(data.get("description")!=None):
-				entryName.delete(0, 'end')
+				eAparelho.delete(0,'end')
 				eAparelho.insert(0,client_clone.list_equipments[0].description)
 				#set garantia pronta e entregue
 		

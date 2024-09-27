@@ -2,21 +2,21 @@ import React, { Component } from "react";
 
 import {
   Text,
-  ScrollView,
   TouchableOpacity,
   StyleSheet,
   RefreshControl,
   Button,
   Animated,
   View,
-  Image, // Adicionei o componente Image
+  Image,
   Dimensions,
 } from "react-native";
-import { FIND_ALL_CLIENT } from "../util/urls";
 import axios from "axios";
+import { FIND_ALL_CLIENT } from "../util/urls";
 const HEADER_MAX_HEIGHT = 120;
 const HEADER_MIN_HEIGHT = 70;
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
 class ClientList extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +37,6 @@ class ClientList extends Component {
         client: response.data,
       });
       this.setState({ refreshing: false });
-      //console.log(response.data);
     });
   };
 
@@ -46,7 +45,6 @@ class ClientList extends Component {
       this.setState({
         client: response.data,
       });
-      //console.log(response.data);
     });
   }
   alertItemName = (item) => {
@@ -57,7 +55,7 @@ class ClientList extends Component {
     const headerHeight = this.state.scrollY.interpolate({
       inputRange: [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
       outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
-      extrapolate: "clamp", // Impede que o valor vá além dos limites definidos
+      extrapolate: "clamp",
     });
 
     const headerOpacity = this.state.scrollY.interpolate({
@@ -65,6 +63,18 @@ class ClientList extends Component {
       outputRange: [1, 0],
       extrapolate: "clamp",
     });
+
+    const headerTranslate = this.state.scrollY.interpolate({
+      inputRange: [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
+      outputRange: [0, -HEADER_MAX_HEIGHT + HEADER_MIN_HEIGHT],
+      extrapolate: "clamp",
+    });
+    const scrollViewMarginTop = this.state.scrollY.interpolate({
+      inputRange: [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
+      outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
+      extrapolate: "clamp",
+    });
+
     return (
       <>
         <View style={styles.container}>
@@ -72,22 +82,24 @@ class ClientList extends Component {
           <Animated.View
             style={[
               styles.header,
-              { height: headerHeight, opacity: headerOpacity },
+              {
+                height: headerHeight,
+                opacity: headerOpacity,
+                transform: [{ translateY: headerTranslate }],
+              },
             ]}
           >
             <Image
-              source={require("../assets/eletronica1.png")} // Substitua pela URL da sua imagem ou use require para imagens locais
+              source={require("../assets/eletronica1.png")}
               style={styles.headerImage} // Estilo da imagem
             />
           </Animated.View>
 
-          {/* ScrollView animado */}
-          {/* ScrollView animado */}
           <Animated.ScrollView
-            style={styles.scrollView}
+            style={[styles.scrollView, { marginTop: scrollViewMarginTop }]}
             onScroll={Animated.event(
               [{ nativeEvent: { contentOffset: { y: this.state.scrollY } } }],
-              { useNativeDriver: false } // Necessário para o ScrollView
+              { useNativeDriver: false }
             )}
             scrollEventThrottle={16}
             refreshControl={
@@ -167,7 +179,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   scrollView: {
-    marginTop: HEADER_MAX_HEIGHT, // Para evitar que o conteúdo fique atrás do cabeçalho
+    //  marginTop: HEADER_MAX_HEIGHT, // Para evitar que o conteúdo fique atrás do cabeçalho
   },
 
   content: {

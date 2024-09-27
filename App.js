@@ -91,10 +91,11 @@ const styles = StyleSheet.create({
   },
   headerImage: {
     width: SCREEN_WIDTH * 0.9, // Largura da imagem
-    //  height: SCREEN_HEIGHT, // Altura da imagem
+    height: SCREEN_HEIGHT * 0.3, // Altura da imagem
     //  borderRadius: 25, // Deixa a imagem redonda, caso seja quadrada
     marginBottom: 10, // Espaço entre a imagem e o texto
     //  marginHorizontal: SCREEN_WIDTH * 0.1,
+    alignItems: "center",
   },
   title: {
     fontSize: 24,

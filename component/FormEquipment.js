@@ -48,16 +48,13 @@ const FormEquipment = ({ route, navigation }) => {
         setId(json["equipments"][0].id);
         console.log("id  = " + id);
       });
-    // O retorno do useEffect (opcional) seria executado quando o componente for desmontado
+    
     return () => {
       console.log("Componente desmontado!");
     };
-  }, []); // O array vazio [] faz com que o useEffect seja executado apenas uma vez, na montagem.
-  // Por exemplo, poderia ser uma chamada de API aqui
-  const carregarDados = () => {
-    // Simulação de uma função que carrega dados
-    console.log("Carregando dados...");
-  };
+  }, []); 
+  
+  
   const handleSubmit = () => {
     fetch(UPDATE_EQUIPMENT, {
       method: "POST",

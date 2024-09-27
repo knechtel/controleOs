@@ -77,7 +77,7 @@ public class EquipmentDto {
         Equipment entity = new Equipment();
         if (equipmentDto.getId() != null)
             entity.setId(equipmentDto.getId());
-
+        entity.setDescription(description);
         entity.setModel(model);
         entity.setSerial(serial);
         entity.setBrand(brand);

@@ -582,6 +582,7 @@ def select_from_list_box(event):
 	
 	obj_client = listbox.curselection()
 	global aux_client
+
 	try:
 		aux_client = str(obj_client).replace(")","",2).replace("(","",2).replace(",","",2)
 	
@@ -593,6 +594,7 @@ def select_from_list_box(event):
 		idCad.config(text=texto)
 	except ValueError:
 		print("")
+
 
 	set_client()
 	set_equipment()

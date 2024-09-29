@@ -11,60 +11,19 @@ import {
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-
 import ClientList from "./component/ClientList";
 import FormEquipment from "./component/FormEquipment";
 import FormClient from "./component/FormClient";
-import { FIND_USER } from "./util/urls";
+
+import AnimationsA from "./component/AnimationsScale";
+import AnimationsScale from "./component/AnimationsScale";
+
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+
 const Login = ({ navigation }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = () => {
-    if (username === "admin" && password === "1234") {
-      fetch(FIND_USER, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          login: "maiquel",
-          password: "123",
-        }),
-      })
-        .then((response) => response.json())
-        .then((json) => {});
-
-      navigation.navigate("Client");
-    } else {
-      Alert.alert("Erro", "Usuário ou senha inválidos");
-    }
-  };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Eletrônica São José </Text>
-      <Image
-        source={require("./assets/eletronicaLogo.png")} // Substitua pela URL da sua imagem ou use require para imagens locais
-        style={styles.headerImage} // Estilo da imagem
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Usuário"
-        value={username}
-        onChangeText={setUsername}
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Senha"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-
-      <Button title="Entrar" onPress={handleLogin} />
+      <AnimationsA />
     </View>
   );
 };
@@ -73,11 +32,11 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={Login} />
+      <Stack.Navigator initialRouteName="AnimationsA">
         <Stack.Screen name="Client" component={ClientList} />
         <Stack.Screen name="Equipment" component={FormEquipment} />
         <Stack.Screen name="FormClient" component={FormClient} />
+        <Stack.Screen name="AnimationsA" component={AnimationsScale} />
       </Stack.Navigator>
     </NavigationContainer>
   );

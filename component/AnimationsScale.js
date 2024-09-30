@@ -64,13 +64,14 @@ export default class AnimationsScale extends Component {
     };
     return (
       <View style={styles.container}>
-        <Image
+        <Animated.Image
           source={require("../assets/eletronicaLogo.png")} // Substitua pela URL da sua imagem ou use require para imagens locais
-          style={styles.headerImage} // Estilo da imagem
+          style={[styles.headerImage, animatedStyles]} // Aplique os estilos animados
         />
         <Text
           style={{
-            marginBottom: 80,
+            marginTop: 40,
+            marginBottom: 120,
             fontSize: 24,
             color: "black",
           }}
@@ -107,9 +108,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   box: {
-    width: 150,
-    height: 170,
+    width: 145,
+    height: 160,
     backgroundColor: "white",
+  },
+  headerImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 40,
   },
   input: {
     height: 40,

@@ -9,6 +9,7 @@ import {
   StyleSheet,
   ScrollView,
   Text,
+  Linking,
 } from "react-native";
 import { FIND_BY_ID_CLIENT, UPDATE_CLIENT } from "../util/urls";
 redirectToEdit = (id) => {
@@ -48,6 +49,21 @@ const FormClient = ({ route, navigation }) => {
       console.log("Componente desmontado!");
     };
   }, []);
+  const geraPDF = () => {
+    Linking.canOpenURL(
+      "http://ec2-52-67-56-229.sa-east-1.compute.amazonaws.com:8080/download?id=" +
+        id
+    ).then((supported) => {
+      if (supported) {
+        Linking.openURL(
+          "http://ec2-52-67-56-229.sa-east-1.compute.amazonaws.com:8080/download?id=" +
+            id
+        );
+      } else {
+        console.log("Don't know how to open URI: ");
+      }
+    });
+  };
   const handleSubmit = () => {
     fetch(UPDATE_CLIENT, {
       method: "POST",
@@ -115,10 +131,19 @@ const FormClient = ({ route, navigation }) => {
         value={endereco}
         onChangeText={setEndereco}
       />
-      <Button title="Enviar" onPress={handleSubmit} />
+
+      <Button styles={styles.input} title="Enviar" onPress={handleSubmit} />
+
       <View style={stylesLink.container}>
         <Text>Detalhes do Equipamento!</Text>
         <TouchableOpacity onPress={redirectToEdit}>
+          <Text style={stylesLink.link}>Clique aqui</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={stylesLink.container}>
+        <Text>Gera PDF!</Text>
+        <TouchableOpacity onPress={geraPDF}>
           <Text style={stylesLink.link}>Clique aqui</Text>
         </TouchableOpacity>
       </View>
@@ -127,6 +152,12 @@ const FormClient = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  button: {
+    // Para que os botões fiquem na horizontal
+    justifyContent: "space-between", // Distribui o espaço igualmente entre os botões
+    alignItems: "center",
+    padding: 10,
+  },
   container: {
     flexGrow: 1,
     justifyContent: "center",

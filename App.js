@@ -32,11 +32,11 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="AnimationsA">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Client" component={ClientList} />
         <Stack.Screen name="Equipment" component={FormEquipment} />
         <Stack.Screen name="FormClient" component={FormClient} />
-        <Stack.Screen name="AnimationsA" component={AnimationsScale} />
+        <Stack.Screen name="Login" component={AnimationsScale} />
       </Stack.Navigator>
     </NavigationContainer>
   );

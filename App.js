@@ -1,73 +1,87 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  Alert,
-  StyleSheet,
-  Image,
-  Dimensions,
-} from "react-native";
+import React from "react";
+import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import ClientList from "./component/ClientList";
-import FormEquipment from "./component/FormEquipment";
-import FormClient from "./component/FormClient";
-
-import AnimationsA from "./component/AnimationsScale";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import AnimationsScale from "./component/AnimationsScale";
+import ClientList from "./component/ClientList";
+import FormClient from "./component/FormClient";
+import FormEquipment from "./component/FormEquipment";
+// Exemplo de tela de Login
+// Exemplo de telas
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+// Criando o Bottom Tab Navigator
+const Tab = createBottomTabNavigator();
 
-const Login = ({ navigation }) => {
+function BottomNavegator() {
   return (
-    <View style={styles.container}>
-      <AnimationsA />
-    </View>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+
+          if (route.name === "FormClient1") {
+            iconName = "login"; // Nome do ícone para a aba de login
+            return <Icon name={iconName} color={color} size={size} />;
+          } else if (route.name === "Client") {
+            iconName = "view-dashboard"; // Nome do ícone para a aba de dashboard
+          }
+          return <Icon name={iconName} color={color} size={size} />;
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: "tomato",
+        inactiveTintColor: "gray",
+      }}
+    >
+      <Tab.Screen name="Client" component={ClientList} />
+      <Tab.Screen name="FormClient1" component={FormClient} />
+    </Tab.Navigator>
   );
-};
-// Criando o Stack Navigator
+}
+
+// Criando o Stack Navigator para controlar o login e as telas com tabs
 const Stack = createStackNavigator();
-const App = () => {
+
+export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Client" component={ClientList} />
-        <Stack.Screen name="Equipment" component={FormEquipment} />
-        <Stack.Screen name="FormClient" component={FormClient} />
-        <Stack.Screen name="Login" component={AnimationsScale} />
+        {/* Tela de Login sem aba */}
+
+        <Stack.Screen
+          name="Client"
+          component={ClientList}
+          options={{ headerShown: false }} // Sem cabeçalho na tela de login
+        />
+        <Stack.Screen
+          name="Client1"
+          component={ClientList}
+          options={{ headerShown: false }} // Sem cabeçalho na tela de login
+        />
+        <Stack.Screen
+          name="Login"
+          component={AnimationsScale}
+          options={{ headerShown: false }} // Sem cabeçalho na tela de login
+        />
+        <Stack.Screen
+          name="FormClient1"
+          component={FormClient}
+          options={{ headerShown: false }} // Sem cabeçalho na tela de login
+        />
+        <Stack.Screen
+          name="Equipment"
+          component={FormEquipment}
+          options={{ headerShown: true }} // Sem cabeçalho na tela de login
+        />
+        {/* Tela com Bottom Tab Navigator */}
+        <Stack.Screen
+          name="Tela"
+          component={BottomNavegator}
+          options={{ headerShown: false }} // Sem cabeçalho para as abas
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-  },
-  headerImage: {
-    width: SCREEN_WIDTH * 0.9, // Largura da imagem
-    height: SCREEN_HEIGHT * 0.3, // Altura da imagem
-    //  borderRadius: 25, // Deixa a imagem redonda, caso seja quadrada
-    marginBottom: 10, // Espaço entre a imagem e o texto
-    //  marginHorizontal: SCREEN_WIDTH * 0.1,
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-});
-export default App;
+}

@@ -10,7 +10,11 @@ import {
   View,
   Image,
   Dimensions,
+  Linking,
 } from "react-native";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+
 import axios from "axios";
 import { FIND_ALL_CLIENT } from "../util/urls";
 const HEADER_MAX_HEIGHT = 120;
@@ -24,11 +28,34 @@ class ClientList extends Component {
       client: [],
       refreshing: false,
       scrollY: new Animated.Value(0),
+      id: null,
     };
   }
+  handleNavigation = (id) => {
+    // Navega para a rota especificada
+    this.props.router.push("/Client/FormClient/" + id);
+  };
+
   redirectToEditEquipment = (id) => {
     const { navigation } = this.props;
-    navigation.navigate("FormClient", { paramKey: id });
+    //  this.handleNavigation(id);
+    console.log("aquiii => " + id);
+    // navigation.navigate("Client", {
+    //   screen: "FormClient1",
+    //   params: { paramKey: id },
+    // });
+    // navigation.navigate("FormClient1", {
+    //   paramKey: id,
+    //   key: id,
+    // });este funciona
+    this.setState({ id: id }, () => {
+      //navigation.navigate("FormClient1", { paramKey: id });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "FormClient1", params: { paramKey: id } }],
+      });
+    });
+    //this.props.router.push("/Client/FormClient/" + id);
   };
   _onRefresh = () => {
     this.setState({ refreshing: true });
@@ -122,7 +149,7 @@ class ClientList extends Component {
             ))}
           </Animated.ScrollView>
           <Button
-            onPress={this.redirectToHome}
+            onPress={this.handleClick}
             title="Adicionar equipamento"
             color="#841584"
           />
@@ -130,7 +157,7 @@ class ClientList extends Component {
       </>
     );
   }
-}
+};
 
 export default ClientList;
 

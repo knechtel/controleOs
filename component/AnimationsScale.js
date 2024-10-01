@@ -35,8 +35,12 @@ export default class AnimationsScale extends Component {
       })
         .then((response) => response.json())
         .then((json) => {});
-
-      this.props.navigation.navigate("Client");
+      const { navigation } = this.props;
+      navigation.navigate("Tela");
+      // navigation.navigate("Login", {
+      //   screen: "FormClient",
+      //   params: { paramkey: "2" },
+      // });
     } else {
       Alert.alert("Erro", "Usuário ou senha inválidos");
     }

@@ -22,7 +22,8 @@ function BottomNavegator() {
           let iconName;
 
           if (route.name === "FormClient1") {
-            iconName = "login"; // Nome do ícone para a aba de login
+            iconName = "home"; // Nome do ícone para a aba de login
+
             return <Icon name={iconName} color={color} size={size} />;
           } else if (route.name === "Client") {
             iconName = "view-dashboard"; // Nome do ícone para a aba de dashboard
@@ -35,8 +36,20 @@ function BottomNavegator() {
         inactiveTintColor: "gray",
       }}
     >
-      <Tab.Screen name="Client" component={ClientList} />
-      <Tab.Screen name="FormClient1" component={FormClient} />
+      <Tab.Screen
+        name="Client"
+        component={ClientList}
+        options={{
+          tabBarLabel: "Clientes", // Rótulo personalizado para a aba de "Clientes"
+        }}
+      />
+      <Tab.Screen
+        name="FormClient1"
+        component={FormClient}
+        options={{
+          tabBarLabel: "Cadastro de Cliente", // Rótulo personalizado para a aba de "Clientes"
+        }}
+      />
     </Tab.Navigator>
   );
 }
@@ -55,11 +68,7 @@ export default function App() {
           component={ClientList}
           options={{ headerShown: false }} // Sem cabeçalho na tela de login
         />
-        <Stack.Screen
-          name="Client1"
-          component={ClientList}
-          options={{ headerShown: false }} // Sem cabeçalho na tela de login
-        />
+        <Stack.Screen name="Client1" component={ClientList} />
         <Stack.Screen
           name="Login"
           component={AnimationsScale}

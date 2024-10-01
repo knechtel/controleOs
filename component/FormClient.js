@@ -11,6 +11,7 @@ import {
   Text,
   Linking,
 } from "react-native";
+
 import { FIND_BY_ID_CLIENT, UPDATE_CLIENT } from "../util/urls";
 redirectToEdit = (id) => {
   navigation.navigate("Equipment", { paramKey: id });
@@ -23,31 +24,37 @@ const FormClient = ({ route, navigation }) => {
   const [email, setEmail] = useState("");
   const [endereco, setEndereco] = useState("");
   redirectToEdit = () => {
-    navigation.navigate("Equipment", { paramKey: id });
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Equipment", params: { paramKey: id } }],
+    });
   };
   useEffect(() => {
-    idClient = route.params.paramKey;
-    setId(idClient);
-    fetch(FIND_BY_ID_CLIENT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: idClient,
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        setEmail(json["email"]);
-        setNome(json["name"]);
-        setEndereco(json["address"]);
-        setCpf(json["cpf"]);
-        setTelefone(json["phone"]);
-      });
-    return () => {
-      console.log("Componente desmontado!");
-    };
+    const params = route.params;
+    if (params) {
+      idClient = route.params.paramKey;
+      setId(idClient);
+      fetch(FIND_BY_ID_CLIENT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: idClient,
+        }),
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          setEmail(json["email"]);
+          setNome(json["name"]);
+          setEndereco(json["address"]);
+          setCpf(json["cpf"]);
+          setTelefone(json["phone"]);
+        });
+      return () => {
+        console.log("Componente desmontado!");
+      };
+    }
   }, []);
   const geraPDF = () => {
     Linking.canOpenURL(
@@ -91,63 +98,65 @@ const FormClient = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Formulário de Cliente</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Nome"
-        value={nome}
-        onChangeText={setNome}
-      />
+    <>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>Formulário de Cliente</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Nome"
+          value={nome}
+          onChangeText={setNome}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="CPF"
-        value={cpf}
-        onChangeText={setCpf}
-        keyboardType="numeric"
-        maxLength={15} // Limita o número de caracteres do CPF a 11
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="CPF"
+          value={cpf}
+          onChangeText={setCpf}
+          keyboardType="numeric"
+          maxLength={15} // Limita o número de caracteres do CPF a 11
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Telefone"
-        value={telefone}
-        onChangeText={setTelefone}
-        keyboardType="phone-pad"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Telefone"
+          value={telefone}
+          onChangeText={setTelefone}
+          keyboardType="phone-pad"
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Endereço"
-        value={endereco}
-        onChangeText={setEndereco}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Endereço"
+          value={endereco}
+          onChangeText={setEndereco}
+        />
 
-      <Button styles={styles.input} title="Enviar" onPress={handleSubmit} />
+        <Button styles={styles.input} title="Enviar" onPress={handleSubmit} />
 
-      <View style={stylesLink.container}>
-        <Text>Detalhes do Equipamento!</Text>
-        <TouchableOpacity onPress={redirectToEdit}>
-          <Text style={stylesLink.link}>Clique aqui</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={stylesLink.container}>
+          <Text>Detalhes do Equipamento!</Text>
+          <TouchableOpacity onPress={redirectToEdit}>
+            <Text style={stylesLink.link}>Clique aqui</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={stylesLink.container}>
-        <Text>Gera PDF!</Text>
-        <TouchableOpacity onPress={geraPDF}>
-          <Text style={stylesLink.link}>Clique aqui</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+        <View style={stylesLink.container}>
+          <Text>Gera PDF!</Text>
+          <TouchableOpacity onPress={geraPDF}>
+            <Text style={stylesLink.link}>Clique aqui</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </>
   );
 };
 

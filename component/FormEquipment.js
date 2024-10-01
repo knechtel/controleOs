@@ -23,6 +23,13 @@ const FormEquipment = ({ route, navigation }) => {
   const [defeito, setDefeito] = useState("");
   const [preco, setPreco] = useState("");
   // useEffect será executado quando o componente for montado
+  handleBack = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Tela", params: { paramKey: id } }],
+    });
+  };
+
   useEffect(() => {
     idClient = route.params.paramKey;
 
@@ -48,13 +55,12 @@ const FormEquipment = ({ route, navigation }) => {
         setId(json["equipments"][0].id);
         console.log("id  = " + id);
       });
-    
+
     return () => {
       console.log("Componente desmontado!");
     };
-  }, []); 
-  
-  
+  }, []);
+
   const handleSubmit = () => {
     fetch(UPDATE_EQUIPMENT, {
       method: "POST",
@@ -144,6 +150,7 @@ const FormEquipment = ({ route, navigation }) => {
         <Text>Garantia</Text>
       </View>
       <Button title="Enviar" onPress={handleSubmit} />
+      <Button title="Voltar" onPress={handleBack} />
     </ScrollView>
   );
 };

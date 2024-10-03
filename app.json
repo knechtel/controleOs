@@ -20,7 +20,15 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.saojose.br"
+      "package": "com.saojose.br",
+      "allowHttp": true,
+      "permissions": [
+        "INTERNET",     
+        "ACCESS_FINE_LOCATION",
+        "CAMERA",       
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,6 +37,7 @@
       "eas": {
         "projectId": "cb28e039-9a76-4f88-928b-a1aca4405ca3"
       }
-    }
+    },
+    "plugins":[ [ "expo-build-properties", { "android": { "usesCleartextTraffic": true } } ] ]
   }
 }

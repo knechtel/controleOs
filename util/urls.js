@@ -6,3 +6,7 @@ export const FIND_BY_ID_CLIENT = LOCAL + "/client-findById";
 export const UPDATE_CLIENT = LOCAL + "/client-update";
 export const UPDATE_EQUIPMENT = LOCAL + "/equipment-update";
 export const FIND_USER = LOCAL + "/user-find";
+export const CREATE_EQUIPMENT = LOCAL + "/equipment-create";
+export const CREATE_CLIENT = LOCAL + "/client-create";
+export const FIND_BY_ID_CLIENT_ALL_EQUIPMENT =
+  LOCAL + "/client-findByAllEquipment";

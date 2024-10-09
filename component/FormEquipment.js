@@ -10,10 +10,17 @@ import {
   ScrollView,
 } from "react-native";
 import { Checkbox } from "react-native-paper";
-import { FIND_BY_ID_CLIENT, UPDATE_EQUIPMENT } from "../util/urls";
+import {
+  CREATE_EQUIPMENT,
+  FIND_BY_ID_CLIENT,
+  FIND_BY_ID_CLIENT_ALL_EQUIPMENT,
+  UPDATE_EQUIPMENT,
+} from "../util/urls";
 
 const FormEquipment = ({ route, navigation }) => {
+  const [novo, setNovo] = useState(false);
   const [id, setId] = useState();
+  const [idClient, setIdClient] = useState();
   const [entregue, setEntregue] = useState(false);
   const [garantia, setGarantia] = useState(false);
   const [descricao, setDescricao] = useState("");
@@ -22,6 +29,7 @@ const FormEquipment = ({ route, navigation }) => {
   const [marca, setMarca] = useState("");
   const [defeito, setDefeito] = useState("");
   const [preco, setPreco] = useState("");
+  const [equipments, setEquipments] = useState([]);
   // useEffect será executado quando o componente for montado
   handleBack = () => {
     navigation.reset({
@@ -31,57 +39,94 @@ const FormEquipment = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    idClient = route.params.paramKey;
+    valor = route.params.paramKey;
+    setIdClient(valor);
+    setId(valor);
 
-    fetch(FIND_BY_ID_CLIENT, {
+    fetch(FIND_BY_ID_CLIENT_ALL_EQUIPMENT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: idClient,
+        id: valor,
       }),
     })
       .then((response) => response.json())
       .then((json) => {
-        setDescricao(json["equipments"][0].description);
-        setGarantia(json["equipments"][0].garantia);
-        setEntregue(json["equipments"][0].entregue);
-        setModelo(json["equipments"][0].model);
-        setSerial(json["equipments"][0].serial);
-        setMarca(json["equipments"][0].brand);
-        setDefeito(json["equipments"][0]["defectDefectForRepair"]);
-        setPreco(String(json["equipments"][0]["price"]) + ".00");
-        setId(json["equipments"][0].id);
-        console.log("id  = " + id);
+        if (json["equipments"].length > 0) {
+          setDescricao(json["equipments"][0].description);
+          setGarantia(json["equipments"][0].garantia);
+          setEntregue(json["equipments"][0].entregue);
+          setModelo(json["equipments"][0].model);
+          setSerial(json["equipments"][0].serial);
+          setMarca(json["equipments"][0].brand);
+          setDefeito(json["equipments"][0]["defectDefectForRepair"]);
+          setPreco(String(json["equipments"][0]["price"]) + ".00");
+          setId(json["equipments"][0].id);
+          setNovo(false);
+          setEquipments(json["equipments"]);
+        } else {
+          setNovo(true);
+        }
       });
 
     return () => {
       console.log("Componente desmontado!");
     };
-  }, []);
+  }, [route.params.paramKey]);
 
   const handleSubmit = () => {
-    fetch(UPDATE_EQUIPMENT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: id,
-        description: descricao,
-        model: modelo,
-        serial: serial,
-        brand: marca,
-        defectForRepair: defeito,
-        price: parseFloat(preco),
-        entregue: entregue,
-        garantia: garantia,
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => {});
-    alert("Equipamento editado com sucesso!");
+    if (equipments.length > 0) {
+      fetch(UPDATE_EQUIPMENT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: id,
+          idClient: idClient,
+          description: descricao,
+          model: modelo,
+          serial: serial,
+          brand: marca,
+          defectForRepair: defeito,
+          price: parseFloat(preco),
+          entregue: entregue,
+          garantia: garantia,
+          devolucao: false,
+        }),
+      })
+        .then((response) => response.json())
+        .then((json) => {});
+      alert("Equipamento editado com sucesso!");
+      console.log("persist...id Client = r" + idClient);
+      console.log("lista = > 0" + equipments);
+    } else {
+      console.log("lista = < 0  " + equipments);
+      fetch(CREATE_EQUIPMENT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          idClient: idClient,
+          description: descricao,
+          model: modelo,
+          serial: serial,
+          brand: marca,
+          defectForRepair: defeito,
+          price: parseFloat(preco),
+          entregue: entregue,
+          garantia: garantia,
+          devolucao: false,
+          obs: "",
+        }),
+      })
+        .then((response) => response.json())
+        .then((json) => {});
+      alert("Equipamento criado com sucesso!");
+    }
   };
 
   return (

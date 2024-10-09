@@ -35,10 +35,6 @@ function BottomNavegator() {
           return <Icon name={iconName} color={color} size={size} />;
         },
       })}
-      tabBarOptions={{
-        activeTintColor: "tomato",
-        inactiveTintColor: "gray",
-      }}
     >
       <Tab.Screen
         name="Clientes"
@@ -51,6 +47,7 @@ function BottomNavegator() {
         name="FormClient1"
         component={FormClient}
         options={{
+          title: "Cliente",
           tabBarLabel: "Cadastro de Cliente", // Rótulo personalizado para a aba de "Clientes"
         }}
       />
@@ -88,7 +85,9 @@ export default function App() {
         <Stack.Screen
           name="FormClient1"
           component={FormClient}
-          options={{ headerShown: false }} // Sem cabeçalho na tela de login
+          options={{
+            title: "test",
+          }} // Sem cabeçalho na tela de login
         />
         <Stack.Screen
           name="Equipment"

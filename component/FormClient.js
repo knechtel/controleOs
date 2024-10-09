@@ -12,7 +12,7 @@ import {
   Linking,
 } from "react-native";
 
-import { FIND_BY_ID_CLIENT, UPDATE_CLIENT } from "../util/urls";
+import { CREATE_CLIENT, FIND_BY_ID_CLIENT, UPDATE_CLIENT } from "../util/urls";
 redirectToEdit = (id) => {
   navigation.navigate("Equipment", { paramKey: id });
 };
@@ -23,6 +23,7 @@ const FormClient = ({ route, navigation }) => {
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [endereco, setEndereco] = useState("");
+  const [novo, setNovo] = useState(false);
   redirectToEdit = () => {
     navigation.reset({
       index: 0,
@@ -32,6 +33,7 @@ const FormClient = ({ route, navigation }) => {
   useEffect(() => {
     const params = route.params;
     if (params) {
+      setNovo(false);
       idClient = route.params.paramKey;
       setId(idClient);
       fetch(FIND_BY_ID_CLIENT, {
@@ -54,6 +56,9 @@ const FormClient = ({ route, navigation }) => {
       return () => {
         console.log("Componente desmontado!");
       };
+    } else {
+      setNovo(true);
+      console.log("valor => " + id);
     }
   }, []);
   const geraPDF = () => {
@@ -72,29 +77,54 @@ const FormClient = ({ route, navigation }) => {
     });
   };
   const handleSubmit = () => {
-    fetch(UPDATE_CLIENT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: id,
-        name: nome,
-        address: endereco,
-        cpf: String(cpf),
-        phone: telefone,
-        email: email,
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        setEmail(json["email"]);
-        setNome(json["name"]);
-        setEndereco(json["address"]);
-        setCpf(json["cpf"]);
-        setTelefone(json["phone"]);
-      });
-    alert("Cliente editado com sucesso!");
+    if (novo) {
+      //move para outra tela
+      idAux = 0;
+      fetch(CREATE_CLIENT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: nome,
+          address: endereco,
+          cpf: String(cpf),
+          phone: telefone,
+          email: email,
+        }),
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          idAux = json.id;
+          console.log("==================");
+          console.log("id " + idAux);
+          navigation.navigate("Equipment", { paramKey: idAux, flagNovo: true });
+        });
+    } else {
+      fetch(UPDATE_CLIENT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: idAux,
+          name: nome,
+          address: endereco,
+          cpf: String(cpf),
+          phone: telefone,
+          email: email,
+        }),
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          setEmail(json["email"]);
+          setNome(json["name"]);
+          setEndereco(json["address"]);
+          setCpf(json["cpf"]);
+          setTelefone(json["phone"]);
+        });
+      alert("Cliente editado com sucesso!");
+    }
   };
 
   return (

@@ -35,7 +35,12 @@ class ClientList extends Component {
     // Navega para a rota especificada
     this.props.router.push("/Client/FormClient/" + id);
   };
-
+  handleClick = () => {
+    this.props.navigation.reset({
+      index: 0,
+      routes: [{ name: "FormClient1", params: { paramKey: 0 } }],
+    });
+  };
   redirectToEditEquipment = (id) => {
     const { navigation } = this.props;
     //  this.handleNavigation(id);

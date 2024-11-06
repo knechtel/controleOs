@@ -22,7 +22,6 @@ function BottomNavegator() {
 
           if (route.name === "FormClient1") {
             iconName = "home";
-
             return <Icon name={iconName} color={color} size={size} />;
           } else if (route.name === "Clientes") {
             iconName = "view-dashboard";

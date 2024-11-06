@@ -10,6 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Checkbox } from "react-native-paper";
+import { TextInputMask } from "react-native-masked-text";
 import {
   CREATE_EQUIPMENT,
   FIND_BY_ID_CLIENT,
@@ -18,6 +19,8 @@ import {
 } from "../util/urls";
 
 const FormEquipment = ({ route, navigation }) => {
+  const [inputMoeda, setInputMoeda] = useState("0");
+  const [valorMoeda, setValorMoeda] = useState(0);
   const [novo, setNovo] = useState(false);
   const [id, setId] = useState();
   const [idClient, setIdClient] = useState();
@@ -63,6 +66,7 @@ const FormEquipment = ({ route, navigation }) => {
           setMarca(json["equipments"][0].brand);
           setDefeito(json["equipments"][0]["defectDefectForRepair"]);
           setPreco(String(json["equipments"][0]["price"]) + ".00");
+          setInputMoeda(String(json["equipments"][0]["price"]) + ".00");
           setId(json["equipments"][0].id);
           setNovo(false);
           setEquipments(json["equipments"]);
@@ -163,11 +167,18 @@ const FormEquipment = ({ route, navigation }) => {
         onChangeText={setDefeito}
       />
 
-      <TextInput
+      <TextInputMask
+        type={"money"}
         style={styles.input}
         placeholder="Preço"
-        value={preco}
-        onChangeText={(preco) => setPreco(preco)}
+        value={inputMoeda}
+        onChangeText={(value) => {
+          setInputMoeda(value);
+          value = value.replace("R$", "");
+          value = value.replace(".", "");
+          value = value.replace(",", ".");
+          setPreco(value);
+        }}
         keyboardType="numeric"
       />
 

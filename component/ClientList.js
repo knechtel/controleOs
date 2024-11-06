@@ -32,7 +32,6 @@ class ClientList extends Component {
     };
   }
   handleNavigation = (id) => {
-    // Navega para a rota especificada
     this.props.router.push("/Client/FormClient/" + id);
   };
   handleClick = () => {

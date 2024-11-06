@@ -28,13 +28,7 @@ const FormClient = ({ route, navigation }) => {
   const [endereco, setEndereco] = useState("");
   const [novo, setNovo] = useState(false);
 
-  async function downloadPdf() {
-    // Initialize file system module
-    // const response = await fetch(
-    //   "http://ec2-52-67-56-229.sa-east-1.compute.amazonaws.com:8080/download?id=" +
-    //     id
-    // );
-  }
+
   const sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
   };

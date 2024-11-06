@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import AnimationsScale from "./component/AnimationsScale";
+import FormLogin from "./component/FormLogin";
 import ClientList from "./component/ClientList";
 import FormClient from "./component/FormClient";
 import FormEquipment from "./component/FormEquipment";
@@ -58,7 +58,6 @@ function BottomNavegator() {
   );
 }
 
-
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -75,7 +74,7 @@ export default function App() {
         <Stack.Screen name="Client1" component={ClientList} />
         <Stack.Screen
           name="Login"
-          component={AnimationsScale}
+          component={FormLogin}
           options={{ headerShown: false }}
         />
         <Stack.Screen

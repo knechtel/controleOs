@@ -9,10 +9,7 @@ import ClientList from "./component/ClientList";
 import FormClient from "./component/FormClient";
 import FormEquipment from "./component/FormEquipment";
 import About from "./component/About";
-// Exemplo de tela de Login
-// Exemplo de telas
 
-// Criando o Bottom Tab Navigator
 const Tab = createBottomTabNavigator();
 
 function BottomNavegator() {
@@ -24,13 +21,13 @@ function BottomNavegator() {
           let iconName;
 
           if (route.name === "FormClient1") {
-            iconName = "home"; // Nome do ícone para a aba de login
+            iconName = "home";
 
             return <Icon name={iconName} color={color} size={size} />;
           } else if (route.name === "Clientes") {
-            iconName = "view-dashboard"; // Nome do ícone para a aba de dashboard
+            iconName = "view-dashboard";
           } else {
-            iconName = "login"; // Nome do ícone para a aba de dashboard
+            iconName = "login";
           }
           return <Icon name={iconName} color={color} size={size} />;
         },
@@ -48,21 +45,21 @@ function BottomNavegator() {
         component={FormClient}
         options={{
           title: "Cliente",
-          tabBarLabel: "Cadastro de Cliente", // Rótulo personalizado para a aba de "Clientes"
+          tabBarLabel: "Cadastro de Cliente",
         }}
       />
       <Tab.Screen
         name="Sobre"
         component={About}
         options={{
-          tabBarLabel: "Sobre", // Rótulo personalizado para a aba de "Clientes"
+          tabBarLabel: "Sobre",
         }}
       />
     </Tab.Navigator>
   );
 }
 
-// Criando o Stack Navigator para controlar o login e as telas com tabs
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -74,36 +71,36 @@ export default function App() {
         <Stack.Screen
           name="Client"
           component={ClientList}
-          options={{ headerShown: false }} // Sem cabeçalho na tela de login
+          options={{ headerShown: false }}
         />
         <Stack.Screen name="Client1" component={ClientList} />
         <Stack.Screen
           name="Login"
           component={AnimationsScale}
-          options={{ headerShown: false }} // Sem cabeçalho na tela de login
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="FormClient1"
           component={FormClient}
           options={{
             title: "test",
-          }} // Sem cabeçalho na tela de login
+          }}
         />
         <Stack.Screen
           name="Equipment"
           component={FormEquipment}
-          options={{ headerShown: true }} // Sem cabeçalho na tela de login
+          options={{ headerShown: true }}
         />
         <Stack.Screen
           name="About"
           component={About}
-          options={{ headerShown: true }} // Sem cabeçalho na tela de login
+          options={{ headerShown: true }}
         />
         {/* Tela com Bottom Tab Navigator */}
         <Stack.Screen
           name="Tela"
           component={BottomNavegator}
-          options={{ headerShown: false }} // Sem cabeçalho para as abas
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

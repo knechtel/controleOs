@@ -37,10 +37,6 @@ export default class AnimationsScale extends Component {
         .then((json) => {});
       const { navigation } = this.props;
       navigation.navigate("Tela");
-      // navigation.navigate("Login", {
-      //   screen: "FormClient",
-      //   params: { paramkey: "2" },
-      // });
     } else {
       Alert.alert("Erro", "Usuário ou senha inválidos");
     }
@@ -48,11 +44,11 @@ export default class AnimationsScale extends Component {
   startAnimation = () => {
     const { isLarge } = this.state;
     Animated.timing(this.state.animation, {
-      toValue: isLarge ? 1 : 2, // Alterna entre crescer e encolher
+      toValue: isLarge ? 1 : 2,
       duration: 1500,
       useNativeDriver: true,
     }).start(() => {
-      this.setState({ isLarge: !isLarge }); // Alterna o estado após a animação
+      this.setState({ isLarge: !isLarge });
     });
   };
 
@@ -69,8 +65,8 @@ export default class AnimationsScale extends Component {
     return (
       <View style={styles.container}>
         <Animated.Image
-          source={require("../assets/eletronicaLogo.png")} // Substitua pela URL da sua imagem ou use require para imagens locais
-          style={[styles.headerImage, animatedStyles]} // Aplique os estilos animados
+          source={require("../assets/eletronicaLogo.png")}
+          style={[styles.headerImage, animatedStyles]}
         />
         <Text
           style={{

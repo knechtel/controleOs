@@ -1,13 +1,23 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { NavigationContainer } from "@react-navigation/native";
+import ClientList from "./ClientList";
+import FormClient from "./FormClient";
+import Home from "./Home";
+import Settings from "./Settings";
+const Drawer = createDrawerNavigator();
 
-const About = () => {
+export default function About() {
   return (
-    <View style={styles.container}>
-      <Text>maiquelKnechtel@gmail.com</Text>
-    </View>
+    <NavigationContainer independent={true}>
+      <Drawer.Navigator initialRouteName="About">
+        <Drawer.Screen name="About" component={Home} />
+        <Drawer.Screen name="Settings" component={Settings} />
+      </Drawer.Navigator>
+    </NavigationContainer>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -17,4 +27,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default About;
+

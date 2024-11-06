@@ -9,13 +9,16 @@ import {
   StyleSheet,
   ScrollView,
   Text,
-  Linking,
 } from "react-native";
-
+import { Platform } from "react-native";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import { Linking } from "react-native";
 import { CREATE_CLIENT, FIND_BY_ID_CLIENT, UPDATE_CLIENT } from "../util/urls";
 redirectToEdit = (id) => {
   navigation.navigate("Equipment", { paramKey: id });
 };
+
 const FormClient = ({ route, navigation }) => {
   const [nome, setNome] = useState("");
   const [id, setId] = useState("");
@@ -24,6 +27,46 @@ const FormClient = ({ route, navigation }) => {
   const [email, setEmail] = useState("");
   const [endereco, setEndereco] = useState("");
   const [novo, setNovo] = useState(false);
+
+  async function downloadPdf() {
+    // Initialize file system module
+    // const response = await fetch(
+    //   "http://ec2-52-67-56-229.sa-east-1.compute.amazonaws.com:8080/download?id=" +
+    //     id
+    // );
+  }
+  const sleep = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+  async function downloadAndSharePDF() {
+    try {
+      const pdfUrl =
+        "http://ec2-52-67-56-229.sa-east-1.compute.amazonaws.com:8080/download?id=" +
+        id;
+      const nome = id + "arquivo.pdf";
+      const fileUri = `${FileSystem.documentDirectory}` + nome;
+
+      // Baixa o PDF para o diretório de documentos do aplicativo
+      const download = await FileSystem.downloadAsync(pdfUrl, fileUri);
+      await sleep(500);
+      if (download.status === 200) {
+        console.log("PDF baixado e salvo em:", download.uri);
+
+        // Verifica se o compartilhamento é suportado
+        const canShare = await Sharing.isAvailableAsync();
+        if (canShare) {
+          // Compartilha o PDF
+          await Sharing.shareAsync(download.uri);
+        } else {
+          console.log("Compartilhamento não disponível neste dispositivo");
+        }
+      } else {
+        console.error("Falha ao baixar o PDF");
+      }
+    } catch (error) {
+      console.error("Erro ao baixar e compartilhar o PDF:", error);
+    }
+  }
   redirectToEdit = () => {
     navigation.reset({
       index: 0,
@@ -96,9 +139,11 @@ const FormClient = ({ route, navigation }) => {
         .then((response) => response.json())
         .then((json) => {
           idAux = json.id;
-          console.log("==================");
-          console.log("id " + idAux);
-          navigation.navigate("Equipment", { paramKey: idAux, flagNovo: true });
+
+          navigation.navigate("Equipment", {
+            paramKey: json.id,
+            flagNovo: true,
+          });
         });
     } else {
       fetch(UPDATE_CLIENT, {
@@ -181,7 +226,7 @@ const FormClient = ({ route, navigation }) => {
 
         <View style={stylesLink.container}>
           <Text>Gera PDF!</Text>
-          <TouchableOpacity onPress={geraPDF}>
+          <TouchableOpacity onPress={downloadAndSharePDF}>
             <Text style={stylesLink.link}>Clique aqui</Text>
           </TouchableOpacity>
         </View>

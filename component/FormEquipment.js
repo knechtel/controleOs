@@ -42,7 +42,7 @@ const FormEquipment = ({ route, navigation }) => {
     valor = route.params.paramKey;
     setIdClient(valor);
     setId(valor);
-
+    setPreco(0.0);
     fetch(FIND_BY_ID_CLIENT_ALL_EQUIPMENT, {
       method: "POST",
       headers: {

@@ -38,7 +38,7 @@ class ClientList extends Component {
   handleClick = () => {
     this.props.navigation.reset({
       index: 0,
-      routes: [{ name: "FormClient1", params: { paramKey: 0 } }],
+      routes: [{ name: "FormClient1" }],
     });
   };
   redirectToEditEquipment = (id) => {

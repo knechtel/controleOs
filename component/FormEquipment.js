@@ -30,7 +30,7 @@ const FormEquipment = ({ route, navigation }) => {
   const [defeito, setDefeito] = useState("");
   const [preco, setPreco] = useState("");
   const [equipments, setEquipments] = useState([]);
-  // useEffect será executado quando o componente for montado
+
   handleBack = () => {
     navigation.reset({
       index: 0,
@@ -71,9 +71,7 @@ const FormEquipment = ({ route, navigation }) => {
         }
       });
 
-    return () => {
-      console.log("Componente desmontado!");
-    };
+    return () => {};
   }, [route.params.paramKey]);
 
   const handleSubmit = () => {
@@ -100,10 +98,7 @@ const FormEquipment = ({ route, navigation }) => {
         .then((response) => response.json())
         .then((json) => {});
       alert("Equipamento editado com sucesso!");
-      console.log("persist...id Client = r" + idClient);
-      console.log("lista = > 0" + equipments);
     } else {
-      console.log("lista = < 0  " + equipments);
       fetch(CREATE_EQUIPMENT, {
         method: "POST",
         headers: {

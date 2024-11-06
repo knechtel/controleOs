@@ -36,7 +36,7 @@ function BottomNavegator() {
         name="Clientes"
         component={ClientList}
         options={{
-          tabBarLabel: "Clientes", // Rótulo personalizado para a aba de "Clientes"
+          tabBarLabel: "Clientes",
         }}
       />
       <Tab.Screen
